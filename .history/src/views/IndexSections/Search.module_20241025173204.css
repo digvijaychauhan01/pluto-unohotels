@@ -1,0 +1,109 @@
+.banner-text {
+  position: absolute;
+  bottom: 20px;
+  width: 98%;
+  text-align: center;
+  z-index: 999;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .banner-text {
+   position: inherit !im;
+  bottom: 20px;
+  width: 98%;
+  text-align: center;
+  z-index: 999;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+  }
+
+.booking_ul_new ul.booking_ul {
+  list-style: none;
+  margin-bottom: 0;
+  display: block;
+  background: rgb(255 255 255 / 84%);
+  padding: 16px 5px;
+}
+.booking_ul li {
+  list-style: none;
+  text-align: left;
+}
+.def-offer {
+  border: 1px solid #943c90;
+  background: #fff;
+  height: 38px;
+  max-width: 130px;
+  padding: 7px 10px;
+  line-height: 23px;
+  color: #943c90;
+  font-size: 14px;
+  width: 100%;
+  float: left;
+  margin-left: 12%;
+}
+.offer-1 select {
+  border: 1px solid #943c90;
+  height: 38px;
+  color: #fff;
+  padding-left: 23px;
+  font-size: 14px;
+  width: 30%;
+  width: 130px;
+  border-radius: 5px !important;
+  float: left;
+  margin-left: 12%;
+  border-radius: 5px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+}
+.booking_ul_new ul.booking_ul {
+  list-style: none;
+  margin-bottom: 0;
+  display: block;
+  background: rgb(255 255 255 / 84%);
+  padding: 16px 5px;
+  border-radius: 10px;
+}
+
+ul.booking_ul li {
+  display: inline-block;
+  position: relative;
+}
+.booking_ul_new ul.booking_ul li label {
+  color: #000;
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: bold;
+  padding-left: 6px;
+}
+
+.booking_ul_new ul.booking_ul li input#bth {
+  border-radius: 5px;
+}
+.booking_ul_new ul.booking_ul li input#bth {
+  margin-top: 5px !important;
+}
+ul.booking_ul li input#bth {
+  width: 100%;
+}
+.bkbtn {
+  background: #000;
+  color: #fff;
+  text-transform: capitalize;
+  padding: 10px 10px;
+  border-radius: 0;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  border: none;
+  font-size: 14px;
+}
