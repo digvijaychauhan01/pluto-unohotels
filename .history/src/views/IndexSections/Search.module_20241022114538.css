@@ -1,0 +1,100 @@
+.banner-text.booking_ul_new {
+  width: 90%;
+  background: rgb(255 255 255 / 68%);
+}
+.banner-text {
+  position: absolute;
+  bottom: 20px;
+  width: 98%;
+  text-align: center;
+  z-index: 999;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+.banner-text .col-md-12 {
+  padding: 0px;
+}
+.form-group {
+  margin-bottom: 0 !important;
+}
+.booking_ul_new ul.booking_ul {
+  list-style: none;
+  margin-bottom: 0;
+  display: block;
+  background: rgb(255 255 255 / 84%);
+  padding: 16px 5px;
+  pad
+}
+.booking_ul_new ul.booking_ul li {
+  width: 9.7%;
+}
+ul.booking_ul li {
+  width: 11.2%;
+  display: inline-block;
+  position: relative;
+  text-align: left;
+}
+.booking_ul_new ul.booking_ul li label {
+  color: #000;
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: bold;
+  padding-left: 6px;
+}
+.booking_ul_new .has-feedback .form-control {
+  background: transparent;
+  border: 1px solid #9c9c9c;
+  border-radius: 4px !important;
+}
+.booking_ul .form-control {
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  padding-left: 10px !important;
+}
+.booking_ul .form-control {
+  background: #fff !important;
+  border: 0px !important;
+}
+.has-feedback .form-control {
+  padding-right: 0;
+  background: #fff;
+  cursor: inherit;
+  border: 0;
+  padding-left: 10px;
+  color: #000;
+  border-radius: 0;
+  height: 38px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+}
+.booking_ul_new ul.booking_ul li.drop_hotel {
+  width: 19%;
+}
+ul.booking_ul li {
+  width: 11.2%;
+  display: inline-block;
+  position: relative;
+  text-align: left;
+}
+.booking_ul_new ul.booking_ul li input#bth {
+  border-radius: 5px;
+}
+.booking_ul_new ul.booking_ul li input#bth {
+  margin-top: 5px !important;
+}
+ul.booking_ul li input#bth {
+  width: 100%;
+}
+.bkbtn {
+  background: #000;
+  color: #fff;
+  text-transform: capitalize;
+  padding: 10px 10px;
+  border-radius: 0;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  border: none;
+  font-size: 14px;
+}
