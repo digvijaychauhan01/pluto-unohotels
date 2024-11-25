@@ -28,7 +28,7 @@ root.render(
       <Route path="/profile-page" exact element={<Profile />} />
       <Route path="/register-page" exact element={<Register />} />
       <Route path="*" element={<Navigate to="/" replace />} />
-      <Route path="/booking/:hotelId" element={<Product />} />
+      <Route path="/booking" element={<Product />} />
       <Route path="/product-page" exact element={<Product />} />
       <Route path="/gallery" exact element={<Gallery />} />
 

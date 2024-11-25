@@ -48,7 +48,7 @@ const EnhancedSearch = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Construct the URL with query parameters
-    const url = `/booking/${hotelId}?city=${city}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&rooms=${rooms}&adults=${adults}&children=${children}`;
+    const url = `/booking?propertyId=${hotelId}&city=${city}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&rooms=${rooms}&adults=${adults}&children=${children}`;
     navigate(url);
   };
 
