@@ -2,16 +2,16 @@ import React from "react";
 
 // reactstrap components
 
-
 // core components
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
-
 
 // index page sections
 import Hero from "./IndexSections/Hero.js";
 import HomeDestinationcard from "./IndexSections/HomeDestinationcard.js";
 import Homeoffercards from "./IndexSections/Homeoffercards.js";
 import HomeDestinationslider from "./IndexSections/HomeDestinationslider.js";
+import Footer from "./IndexSections/Footer.js";
+import FloatIcon from "./IndexSections/Floaticon.js";
 
 class Index extends React.Component {
   componentDidMount() {
@@ -28,10 +28,11 @@ class Index extends React.Component {
           <HomeDestinationcard />
           <HomeDestinationslider />
           <Homeoffercards />
+          <Footer />
+           <FloatIcon />
         </main>
       </>
     );
   }
 }
-
 export default Index;

@@ -3,27 +3,24 @@
   bottom: 20px;
   width: 98%;
   text-align: center;
-  z-index: 999;
   right: 0;
   left: 0;
   margin-right: auto;
   margin-left: auto;
 }
-
 
 @media (min-width: 320px) and (max-width: 900px) {
   .banner-text {
-   position: static !important;
-  bottom: 20px;
-  width: 98%;
-  text-align: center;
-  z-index: 999;
-  right: 0;
-  left: 0;
-  margin-right: auto;
-  margin-left: auto;
-}
+    position: static !important;
+    bottom: 20px;
+    width: 98%;
+    text-align: center;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
   }
+}
 
 .booking_ul_new ul.booking_ul {
   list-style: none;
@@ -32,10 +29,12 @@
   background: rgb(255 255 255 / 84%);
   padding: 16px 5px;
 }
+
 .booking_ul li {
   list-style: none;
   text-align: left;
 }
+
 .def-offer {
   border: 1px solid #943c90;
   background: #fff;
@@ -49,6 +48,7 @@
   float: left;
   margin-left: 12%;
 }
+
 .offer-1 select {
   border: 1px solid #943c90;
   height: 38px;
@@ -66,6 +66,7 @@
   -moz-appearance: none;
   -ms-appearance: none;
 }
+
 .booking_ul_new ul.booking_ul {
   list-style: none;
   margin-bottom: 0;
@@ -79,6 +80,7 @@ ul.booking_ul li {
   display: inline-block;
   position: relative;
 }
+
 .booking_ul_new ul.booking_ul li label {
   color: #000;
   font-size: 14px;
@@ -90,12 +92,15 @@ ul.booking_ul li {
 .booking_ul_new ul.booking_ul li input#bth {
   border-radius: 5px;
 }
+
 .booking_ul_new ul.booking_ul li input#bth {
   margin-top: 5px !important;
 }
+
 ul.booking_ul li input#bth {
   width: 100%;
 }
+
 .bkbtn {
   background: #000;
   color: #fff;
@@ -106,4 +111,415 @@ ul.booking_ul li input#bth {
   margin-top: 6px;
   border: none;
   font-size: 14px;
+}
+
+
+@media (min-width: 320px) and (max-width: 900px) {
+  .searchContainer {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    /* Start off-screen */
+    width: 100%;
+    height: 100%;
+    transition: left 0.3s ease;
+    /* Smooth sliding effect */
+    z-index: 999;
+    /* Ensure it's on top of other content */
+  }
+
+  .show {
+    left: 0;
+    /* Slide in */
+  }
+
+  .hide {
+    left: -100%;
+    /* Slide out */
+  }
+
+  .floating-btn {
+    border-radius: 50%;
+    padding: 10px 15px;
+    font-size: 16px;
+    z-index: 1000;
+  }
+
+  .floating-btn.active {
+    background-color: #dc3545;
+    /* Change to desired active color */
+  }
+
+}
+
+/* mycss.css */
+.container {
+  padding: 2rem 0;
+}
+
+.mainTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.titleUnderline {
+  width: 60px;
+  height: 3px;
+  background-color: #000;
+  margin: 0.5rem auto;
+  border: none;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.cardContent {
+  padding: 2rem;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.cardImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.offerTitle {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  margin-top: -45px;
+  background-color: #fff !important;
+  z-index: 1;
+  position: relative;
+
+}
+
+.offerDescription {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inclusionBtn {
+  background-color: transparent;
+  color: #9b59b6;
+  border: 1px solid #9b59b6;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.bookNowBtn {
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* footer section */
+.footer {
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 23px 0;
+  font-family: Arial, sans-serif;
+  margin-top: 50px;
+}
+
+.navLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  font-size: 14px;
+  padding-bottom: 20px;
+}
+
+.navLinks a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 12px;
+  transition: color 0.3s;
+  letter-spacing: 0.5px;
+}
+
+.navLinks a:hover {
+  color: #f3c5ff;
+}
+
+.middleSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 54px 0;
+  border: 5px solid;
+  padding: 0 10px;
+}
+
+.middleSection::before,
+.middleSection::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 150px;
+  height: 1px;
+  background-color: #fff;
+}
+
+.middleSection::before {
+  left: 0;
+}
+
+.middleSection::after {
+  right: 0;
+}
+
+.logo {
+  height: 130px;
+  max-width: 100%;
+}
+
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.bottomSection p {
+  font-size: 15px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 15px;
+}
+
+.socialIcons a {
+  color: #fff;
+  font-size: 20px;
+  transition: color 0.3s;
+}
+
+.socialIcons a:hover {
+  color: #f3c5ff;
+}
+icons
+.subscribeContainer {
+  display: flex;
+  align-items: right;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.subscribeInput {
+  padding: 8px;
+  font-size: 12px;
+  border: none;
+  border-radius: 2px;
+  width: 200px;
+}
+
+.subscribeButton {
+  background-color: #fff;
+  color: #813183;
+  border: none;
+  padding: 8px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.subscribeButton:hover {
+  background-color: #f3c5ff;
+}
+
+/* Mobile view adjustments */
+@media (max-width: 768px) {
+  .navLinks {
+    gap: 8px;
+    font-size: 10px;
+    flex-direction: row;
+    align-items: center;
+    /* Stack nav items vertically on small screens */
+  }
+
+  .logo {
+    max-height: 80px;
+    /* Reduce logo height on mobile */
+    margin-bottom: 10px;
+  }
+
+  .middleSection {
+    margin: 40px 10px;
+    border: none;
+    /* Remove border on mobile */
+  }
+
+  .bottomSection {
+    padding: 10px 0;
+  }
+
+  .socialIcons a {
+    font-size: 16px;
+  }
+
+  .subscribeContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .subscribeInput {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .subscribeButton {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+
+
+
+/* icon css  */
+
+/* components/FloatIcon.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+}
+
+.iconContainer {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 9px;
+  border-radius: 50%;
+  transition: border 0.3s;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.whatsapp {
+  border: 2px solid #25D366;
+  background: #25D366;
+  color: wheat;
+}
+
+.query {
+  background: #000;
+
+}
+
+.icon {
+  font-size: 24px;
+  margin-right: 2px;
+}
+
+.text {
+  font-size: 16px;
+  color: #000;
+}
+
+/* banner image form */
+/* Hero.module.css */
+/* Initially hide the search form on mobile */
+.searchForm {
+  display: block;
+  transition: all 0.3s ease-in-out; /* Smooth transition */
+}
+
+@media screen and (max-width: 768px) {
+  /* Floating button on mobile */
+  .floatingButton {
+    position: fixed;
+    bottom: 23%;
+    right: 5%; /* Adjust this based on your design */
+    background-color: #000;
+    color: #f0f8ff;
+    border-radius: 50%;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 999;
+    display: block; /* Show the button on mobile */
+  }
+
+  /* Hide floating button when the form is open */
+  .floatingButton.hidden {
+    display: none;
+  }
+
+  /* Hide the search form by default on mobile */
+  .searchForm {
+    display: none; /* Hide the form initially */
+  }
+
+  /* Show the search form when clicked */
+  .searchForm.visible {
+    display: block; /* Show the form when visible */
+  }
+}
+
+@media screen and (min-width: 769px) {
+  /* On desktop (above 768px) */
+  .floatingButton {
+    display: none; /* Hide the floating button on desktop */
+  }
+
+  /* The search form is still visible on desktop */
+  .searchForm {
+    display: block; /* Ensure the search form is shown on desktop */
+  }
+}
+/* Search.module.css */
+
+/* Booking form styles */
+.booking_ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.booking_ul .form-group {
+  margin-bottom: 1rem;
+}
+
+/* Example: Adjust for mobile */
+@media (max-width: 768px) {
+  .booking_ul {
+    flex-direction: column;
+  }
+
+  .form-control {
+    width: 100%;
+    /* Full width input fields on mobile */
+  }
 }

@@ -1,10 +1,22 @@
 [class*="shadow"] {
-	@if $enable-transitions {
+    @if $enable-transitions {
         transition: $transition-base;
+        border-radius: 12px;
     }
 }
 
-.shadow-sm--hover:hover { box-shadow: $box-shadow-sm !important; }
-.shadow--hover:hover { box-shadow: $box-shadow !important; }
-.shadow-lg--hover:hover { box-shadow: $box-shadow-lg !important; }
-.shadow-none--hover:hover { box-shadow: none !important; }
+.shadow-sm--hover:hover {
+    box-shadow: $box-shadow-sm !important;
+}
+
+.shadow--hover:hover {
+    box-shadow: $box-shadow !important;
+}
+
+.shadow-lg--hover:hover {
+    box-shadow: $box-shadow-lg !important;
+}
+
+.shadow-none--hover:hover {
+    box-shadow: none !important;
+}

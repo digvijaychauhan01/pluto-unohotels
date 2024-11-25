@@ -26,16 +26,15 @@ export default function Search() {
                   </select>
                 </div>
               </li>
-
               <li className="col-md-2 ">
                 <div class="form-group">
                   <label for="exampleFormControlSelect2">Hotel</label>
                   <select class="form-control" id="exampleFormControlSelect2">
+                    <option> Hotel Ashirdwad Castle</option>
+                    <option> River Pine Resorts</option>
+                    <option> Alpine Hotel and villa</option>
+                    <option>Grand Hills Hotel and span</option>
                     <option>Mount View</option>
-                    <option>Nature valley</option>
-                    <option>5star</option>
-                    <option>4</option>
-                    <option>5</option>
                   </select>
                 </div>
               </li>
@@ -95,7 +94,11 @@ export default function Search() {
                 </li>
               </li>
               <li className="col-md-2  ">
-                <button class="btn w-100 btn-primary bg-black" type="submit">
+                <button
+                  style={{ background: "#000" }}
+                  class="btn w-100 btn-primary bg-black"
+                  type="submit"
+                >
                   Book now
                 </button>
               </li>

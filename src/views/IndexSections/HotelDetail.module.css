@@ -1,0 +1,248 @@
+/* HotelDetail.module.css */
+
+
+.hotelDetail {
+    font-family: Arial, sans-serif;
+}
+
+/* Image Gallery */
+.imageGallery {
+    display: flex;
+}
+
+/* For the Grid Layout on Desktop */
+.imageGrid {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 10px;
+    width: 100%;
+}
+
+.imageBox {
+    overflow: hidden;
+    border-radius: 10px;
+    /* Rounded corners for images */
+}
+
+.largeImage {
+    grid-column: 1;
+    /* Span one column */
+    height: 400px;
+    /* Adjust height as needed */
+}
+
+.smallImageGrid {
+    grid-column: 2;
+    /* Span one column */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 2x2 grid for small images */
+    gap: 10px;
+}
+
+
+
+/* Image styling */
+.hotelImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ensure images cover their containers */
+}
+
+/* Media query for Mobile */
+@media (max-width: 768px) {
+
+    /* On smaller screens, the grid becomes a flex column */
+    .imageGrid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Large Image takes full width on Mobile */
+    .largeImage {
+        width: 100%;
+        height: 250px;
+        /* Adjust based on your preference */
+    }
+
+    /* Small images in a slide or carousel (full width) */
+    .smallImageGrid {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        /* Allow horizontal scrolling */
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    /* Each small image in the mobile carousel will have a smaller height */
+    .smallImage {
+        width: 100%;
+        max-width: 120px;
+        /* Adjust the size based on your needs */
+        height: 120px;
+        object-fit: cover;
+    }
+}
+
+/* Optional: Style the carousel to add a scroll effect */
+.smallImageGrid::-webkit-scrollbar {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.smallImageGrid::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+
+@media (max-width: 768px) {
+    .sticky-section {
+        position: static;
+        /* Remove sticky behavior on mobile */
+        box-shadow: none;
+        /* Optional: remove shadow for mobile view */
+    }
+}
+
+
+
+/* Image styling */
+.hotelImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Open Gallery Button */
+.openGalleryButton {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    padding: 8px 16px;
+    background-color: #f4f5f7;
+    color: #000;
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    z-index: 10;
+    /* Ensure the button is above the images */
+    font-size: 16px;
+    /* Default font size */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Modal (Gallery View) */
+.galleryModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.galleryModalContent {
+    position: relative;
+    max-width: 80%;
+    max-height: 80%;
+    text-align: center;
+}
+
+.galleryImage {
+    width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.closeButton:hover {
+    color: #ff6347;
+}
+
+.prevButton,
+.nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.prevButton {
+    left: 10px;
+}
+
+.nextButton {
+    right: 10px;
+}
+
+.prevButton:hover,
+.nextButton:hover {
+    color: #ff6347;
+}
+
+/* Media query for Mobile */
+@media (max-width: 768px) {
+
+    /* On smaller screens, the grid becomes a flex column */
+    .imageGrid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Large Image takes full width on Mobile */
+    .largeImage {
+        width: 100%;
+        height: 250px;
+        /* Adjust based on your preference */
+    }
+
+    /* Small images in a slide or carousel (full width) */
+    .smallImageGrid {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        /* Allow horizontal scrolling */
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    /* Each small image in the mobile carousel will have a smaller height */
+    .smallImage {
+        width: 100%;
+        max-width: 120px;
+        /* Adjust the size based on your needs */
+        height: 120px;
+        object-fit: cover;
+    }
+
+    /* Open Gallery Button adjustments for mobile */
+    .openGalleryButton {
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Modals from "./Modals";
 
 const PrevArrow = (props) => (
   <div
@@ -50,28 +51,30 @@ const NextArrow = (props) => (
 );
 
 export default function HomeDestinationslider() {
-  const images = [
-    "https://media.istockphoto.com/id/477417246/photo/india-goa-palolem-beach.jpg?s=612x612&w=0&k=20&c=rRH-ASxJjZzdORnUeT294mbeqgiq7LIBuGJ5HVboNqA=",
-    "https://cdn.britannica.com/37/189837-050-F0AF383E/New-Delhi-India-War-Memorial-arch-Sir.jpg",
-    "https://cdn.britannica.com/25/155325-050-79CFFB62/Taj-Mahal-Agra-India.jpg",
-    "https://media.assettype.com/outlooktraveller%2F2024-01%2Fa369e7e3-f7c8-4210-ae58-1800ea5cb2ea%2FKolkata1.jpg",
-    "https://www.esikkimtourism.in/wp-content/uploads/2019/04/plcstovsrtaugst.jpg",
-    "https://media.ahmedabadmirror.com/am/uploads/mediaGallery/image/1658653042367.jpg-org",
-    "https://viagea.it/wp-content/uploads/2023/05/Cose-da-fare-a-Dubai.png",
-    "https://images.travelandleisureasia.com/wp-content/uploads/sites/3/2024/03/19183130/kuala-lumpur-feature-image-1600x900.jpeg",
-  ];
+  const [destinations, setDestinations] = useState([]); // State to store destinations data
+  const [loading, setLoading] = useState(true); // State for loading state
 
-  const titles = [
-    "GOA",
-    "DELHI",
-    "AGRA",
-    "KOLKATA",
-    "GANGTOK",
-    "AHMEDABAD",
-    "DUBAI",
-    "MALAYSIA",
-  ];
+  // Fetch destination data from API
+  const fetchDestinations = async () => {
+    try {
+      const response = await fetch("https://backend.unohotelsandresorts.com/api/locations");
+      if (!response.ok) {
+        throw new Error("Failed to fetch destinations data");
+      }
+      const data = await response.json();
+      setDestinations(data[0].destinations); // Set destinations state
+      setLoading(false); // Set loading to false after data is fetched
+    } catch (error) {
+      console.error("Error fetching destinations:", error);
+      setLoading(false); // Set loading to false on error
+    }
+  };
 
+  useEffect(() => {
+    fetchDestinations();
+  }, []); // Fetch destinations when the component mounts
+
+  // Slider settings
   const settings = {
     dots: true,
     infinite: true,
@@ -120,22 +123,25 @@ export default function HomeDestinationslider() {
     ],
   };
 
+  // Handle loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="container">
       <div className="pt-4 pb-4 text-center mx-auto">
         <h1 className="fw-black">Our Newest Hotels</h1>
-        <p className="lead text-body-secondary">
-          Our Upcoming Newest Hotels Destinations
-        </p>
+        <p className="lead text-body-secondary">Our Upcoming Newest Hotels Destinations</p>
       </div>
       <div className="slider-container">
         <Slider {...settings}>
-          {images.map((image, index) => (
+          {destinations.map((destination, index) => (
             <div key={index}>
               <div className="card_cus side">
                 <div
                   style={{
-                    backgroundImage: `url(${image})`,
+                    backgroundImage: `url(https://backend.unohotelsandresorts.com/${destination.destination_image})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     height: "350px",
@@ -155,14 +161,12 @@ export default function HomeDestinationslider() {
                       padding: "15px",
                       top: "0%",
                       alignContent: "end",
+                      borderRadius: "10px",
                       background:
                         "linear-gradient(-180deg, rgba(255,255,255,0.10) 0%, rgba(0,0,0,1) 100%)",
                     }}
                   >
-                    <h5
-                      className="card-title bg-black-500"
-                      style={{ color: "#fff" }}
-                    >
+                    <h5 className="card-title bg-black-500" style={{ color: "#fff" }}>
                       <span
                         style={{
                           fontSize: "10px",
@@ -175,19 +179,10 @@ export default function HomeDestinationslider() {
                         Upcoming Hotel Destination
                       </span>
                       <br />
-                      {titles[index]} {/* Use the title from the array */}
+                      {destination.destination_name} {/* Display destination name */}
                     </h5>
-                    <a
-                      href="/"
-                      style={{
-                        background: "#fff",
-                        color: "#000",
-                        border: "1px solid #fff",
-                      }}
-                      className="btn btn-primary pl-2 pr-2 pt-1 pb-1"
-                    >
-                      Know More
-                    </a>
+
+                    <Modals />
                   </div>
                 </div>
               </div>

@@ -35,7 +35,7 @@
     letter-spacing: .05px;
 
     img {
-        height: 70px;
+        height: 50px;
     }
 }
 
@@ -192,11 +192,11 @@
 // Transparent navbar
 
 .navbar-transparent {
-  position: absolute;
+  position: relative;
   top: 0;
   width: 100%;
   z-index: 100;
-  background-color: transparent !important;
+  background-color: black !important;
   border: 0;
   box-shadow: none;
 

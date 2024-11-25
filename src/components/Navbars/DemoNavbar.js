@@ -6,7 +6,6 @@ import { Badge } from "reactstrap";
 
 // reactstrap components
 import {
-  Button,
   UncontrolledCollapse,
   DropdownMenu,
   DropdownItem,
@@ -23,6 +22,7 @@ import {
   Col,
   UncontrolledTooltip,
 } from "reactstrap";
+import Modals from "views/IndexSections/Modals";
 
 class DemoNavbar extends React.Component {
   componentDidMount() {
@@ -57,7 +57,7 @@ class DemoNavbar extends React.Component {
             id="navbar-main"
           >
             <Container>
-              <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
+              <NavbarBrand className="mr-lg-5 mt-3" to="/" tag={Link}>
                 <img
                   className="logo_cus"
                   alt="..."
@@ -102,8 +102,7 @@ class DemoNavbar extends React.Component {
                       <div className="dropdown-menu-inner">
                         <Media
                           className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/overview?ref=adsr-navbar"
-                          target="_blank"
+
                         >
                           <div
                             style={{
@@ -120,7 +119,7 @@ class DemoNavbar extends React.Component {
                               Hotel Ashirdwad Castle
                               <Badge className="ml-2" color="warning">
                                 {" "}
-                                New Hotel
+                                New 4Star Hotel
                               </Badge>
                             </h6>
                             <h4 style={{ fontSize: "12px" }} className="">
@@ -130,8 +129,7 @@ class DemoNavbar extends React.Component {
                         </Media>
                         <Media
                           className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/colors?ref=adsr-navbar"
-                          target="_blank"
+
                         >
                           <div
                             style={{
@@ -157,8 +155,7 @@ class DemoNavbar extends React.Component {
                         </Media>
                         <Media
                           className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/alert?ref=adsr-navbar"
-                          target="_blank"
+
                         >
                           <div
                             style={{
@@ -171,10 +168,10 @@ class DemoNavbar extends React.Component {
                             className="con icon-shape  text-white"
                           ></div>
                           <Media body className="ml-3">
-                            <h5 className="heading text-warning mb-md-1">
+                            <h5 className="heading text-primary mb-md-1">
                               Alpine Hotel and villa
-                              <Badge className="ml-2" color="info">
-                                Comming Soon
+                              <Badge className="ml-2" color="warning">
+                                New 4Star Hotel
                               </Badge>
                             </h5>
                             <h4 style={{ fontSize: "12px" }} className="">
@@ -185,12 +182,11 @@ class DemoNavbar extends React.Component {
 
                         <Media
                           className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/alert?ref=adsr-navbar"
-                          target="_blank"
+
                         >
                           <div
                             style={{
-                              backgroundImage: `url(https://www.royalorchidhotels.com/Images/slide-wildlife.webp)`,
+                              backgroundImage: `url(../assets/img/brand/grand.jpeg)`,
                               backgroundSize: "cover", // Optional: for better fitting
                               backgroundPosition: "center", // Optional: for better positioning
                               height: "50px",
@@ -199,10 +195,10 @@ class DemoNavbar extends React.Component {
                             className="con icon-shape  text-white"
                           ></div>
                           <Media body className="ml-3">
-                            <h5 className="heading text-warning mb-md-1">
-                              Grand Hills Hotel and span
-                              <Badge className="ml-2" color="warning">
-                                New 4 Star
+                            <h5 className="heading text-primary mb-md-1">
+                              Grand Hills Hotel and spa
+                              <Badge className="ml-2" color="info">
+                                Coming Soon
                               </Badge>
                             </h5>
                             <h4 style={{ fontSize: "12px" }} className="">
@@ -216,7 +212,7 @@ class DemoNavbar extends React.Component {
                   <UncontrolledDropdown nav>
                     <DropdownToggle nav>
                       <i className="ni ni-collection d-lg-none mr-1" />
-                      <span className="nav-link-inner--text">Pages</span>
+                      <span className="nav-link-inner--text">Weddings</span>
                     </DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem to="/landing-page" tag={Link}>
@@ -233,14 +229,15 @@ class DemoNavbar extends React.Component {
                       </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
-                  <DropdownToggle nav>
-                    <i className="ni ni-collection d-lg-none mr-1" />
-                    <span className="nav-link-inner--text">Destination</span>
-                  </DropdownToggle>
-                  <DropdownToggle nav>
-                    <i className="ni ni-collection d-lg-none mr-1" />
-                    <span className="nav-link-inner--text">Contact</span>
-                  </DropdownToggle>
+                  <Link className="nav-link inner--text" >
+                    About Us 
+                  </Link>
+                  <Link className="nav-link inner--text" to="/gallery">
+                    Gallery
+                  </Link>
+                  <Link className="nav-link inner--text" to="/contact-us">
+                    Contact Us
+                  </Link>
                 </Nav>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem>
@@ -258,41 +255,10 @@ class DemoNavbar extends React.Component {
                       Email us{" "}
                     </UncontrolledTooltip>
                   </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="https://www.instagram.com/creativetimofficial"
-                      id="tooltip356693867"
-                      target="_blank"
-                      style={{
-                        fontSize: "10px",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      info@unohotelsandresorts.com
-                      <br />
-                      +91-9805096956, +91-8353096962
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Instagram
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip356693867">
-                      Call us
-                    </UncontrolledTooltip>
-                  </NavItem>
+
 
                   <NavItem className="d-none d-lg-block ml-lg-4">
-                    <Button
-                      className="btn-neutral pl-2 pb-1 pr-2 pt-1 btn-icon"
-                      color="black"
-                      href="https://www.creative-tim.com/product/argon-design-system-react?ref=adsr-navbar"
-                      target="_blank"
-                    >
-                      <span className="btn-inner--icon">
-                        <i className="fa fa-cloud-download mr-2" />
-                      </span>
-                      <span className="nav-link-inner--text ml-1">LOGIN</span>
-                    </Button>
+                    <Modals />
                   </NavItem>
                 </Nav>
               </UncontrolledCollapse>
