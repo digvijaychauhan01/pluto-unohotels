@@ -29,7 +29,7 @@
 // Circle sections
 .section-shaped {
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
 
     &.section-hero {
       &:before {
@@ -569,3 +569,7 @@
      pointer-events:none
 }
 */
+
+.react-datepicker-wrapper {
+    width: 100%;
+}

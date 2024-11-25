@@ -58,7 +58,7 @@ export default function HomeDestinationCard() {
   return (
     <div className="container">
       <div className="pt-4 pb-4 text-center mx-auto">
-        <h1 className="fw-black">Our Luxury Hotel Collections</h1>
+        <h1 className="text-3xl font-bold mt-10">Our Luxury Hotel Collections</h1>
         <p className="lead text-body-secondary">
           Business Hotels | Holiday Destinations | Destination Weddings |
           Honeymoon Destinations | Historic Sites
@@ -121,6 +121,7 @@ export default function HomeDestinationCard() {
                           style={{
                             position: "relative",
                             borderRadius: "10px",
+                            width: '100%'
                           }}
                         >
                           <CardImg
@@ -132,6 +133,8 @@ export default function HomeDestinationCard() {
                               pointerEvents: "none", // Disable pointer events on the image
                               width: "100%",
                               borderRadius: "5px",
+                              objectFit: "cover",
+                              height:"300px"
                             }}
                           />
                           {/* "Open Gallery" small button positioned on the right side of the image */}

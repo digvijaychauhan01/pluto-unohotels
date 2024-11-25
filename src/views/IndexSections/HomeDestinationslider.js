@@ -131,7 +131,7 @@ export default function HomeDestinationslider() {
   return (
     <div className="container">
       <div className="pt-4 pb-4 text-center mx-auto">
-        <h1 className="fw-black">Our Newest Hotels</h1>
+        <h1 className="text-3xl font-bold mt-10 ">Our Newest Hotels</h1>
         <p className="lead text-body-secondary">Our Upcoming Newest Hotels Destinations</p>
       </div>
       <div className="slider-container">
