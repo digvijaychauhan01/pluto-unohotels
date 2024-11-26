@@ -4,7 +4,6 @@
   width: 98%;
   text-align: center;
   right: 0;
-  left: 0;
   margin-right: auto;
   margin-left: auto;
 }
@@ -455,7 +454,7 @@ icons
   display: block;
   transition: all 0.3s ease-in-out; /* Smooth transition */
   position: absolute;
-  bottom: 80px;
+  bottom: 60px;
   left: 50%;
   transform: translate(-50%, 0%); 
   width: 100%;
