@@ -33,14 +33,14 @@ class SimpleFooter extends React.Component {
   render() {
     return (
       <>
-        <footer className=" footer">
+        <footer className="footer" style={{ backgroundColor: "#000", color: "#fff", padding: "2rem 0" }}>
           <Container>
-            <Row className=" row-grid align-items-center mb-5">
+            <Row className="row-grid align-items-center mb-5">
               <Col lg="6">
-                <h3 className=" text-primary font-weight-light mb-2">
+                <h3 className="text-primary font-weight-light mb-2" style={{ color: "#fff" }}>
                   Thank you for supporting us!
                 </h3>
-                <h4 className=" mb-0 font-weight-light">
+                <h4 className="mb-0 font-weight-light" style={{ color: "#ccc" }}>
                   Let's get in touch on any of these platforms.
                 </h4>
               </Col>
@@ -51,6 +51,9 @@ class SimpleFooter extends React.Component {
                   href="https://twitter.com/creativetim"
                   id="tooltip475038074"
                   target="_blank"
+                  style={{ backgroundColor: "#1DA1F2", borderColor: "#1DA1F2", transition: "transform 0.3s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
                   <span className="btn-inner--icon">
                     <i className="fa fa-twitter" />
@@ -65,6 +68,9 @@ class SimpleFooter extends React.Component {
                   href="https://www.facebook.com/creativetim"
                   id="tooltip837440414"
                   target="_blank"
+                  style={{ backgroundColor: "#3b5998", borderColor: "#3b5998", transition: "transform 0.3s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
                   <span className="btn-inner--icon">
                     <i className="fa fa-facebook-square" />
@@ -79,6 +85,9 @@ class SimpleFooter extends React.Component {
                   href="https://dribbble.com/creativetim"
                   id="tooltip829810202"
                   target="_blank"
+                  style={{ backgroundColor: "#ea4c89", borderColor: "#ea4c89", transition: "transform 0.3s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
                   <span className="btn-inner--icon">
                     <i className="fa fa-dribbble" />
@@ -93,6 +102,9 @@ class SimpleFooter extends React.Component {
                   href="https://github.com/creativetimofficial"
                   id="tooltip495507257"
                   target="_blank"
+                  style={{ backgroundColor: "#333", borderColor: "#333", transition: "transform 0.3s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
                   <span className="btn-inner--icon">
                     <i className="fa fa-github" />
@@ -103,14 +115,15 @@ class SimpleFooter extends React.Component {
                 </UncontrolledTooltip>
               </Col>
             </Row>
-            <hr />
-            <Row className=" align-items-center justify-content-md-between">
+            <hr style={{ borderColor: "#444" }} />
+            <Row className="align-items-center justify-content-md-between">
               <Col md="6">
-                <div className=" copyright">
+                <div className="copyright" style={{ color: "#ccc" }}>
                   © {new Date().getFullYear()}{" "}
                   <a
                     href="https://www.creative-tim.com?ref=adsr-footer"
                     target="_blank"
+                    style={{ color: "#fff", textDecoration: "underline" }}
                   >
                     Creative Tim
                   </a>
@@ -118,11 +131,12 @@ class SimpleFooter extends React.Component {
                 </div>
               </Col>
               <Col md="6">
-                <Nav className=" nav-footer justify-content-end">
+                <Nav className="nav-footer justify-content-end">
                   <NavItem>
                     <NavLink
                       href="https://www.creative-tim.com?ref=adsr-footer"
                       target="_blank"
+                      style={{ color: "#fff", textDecoration: "underline" }}
                     >
                       Creative Tim
                     </NavLink>
@@ -131,6 +145,7 @@ class SimpleFooter extends React.Component {
                     <NavLink
                       href="https://www.creative-tim.com/presentation?ref=adsr-footer"
                       target="_blank"
+                      style={{ color: "#fff", textDecoration: "underline" }}
                     >
                       About Us
                     </NavLink>
@@ -139,6 +154,7 @@ class SimpleFooter extends React.Component {
                     <NavLink
                       href="http://blog.creative-tim.com?ref=adsr-footer"
                       target="_blank"
+                      style={{ color: "#fff", textDecoration: "underline" }}
                     >
                       Blog
                     </NavLink>
@@ -147,6 +163,7 @@ class SimpleFooter extends React.Component {
                     <NavLink
                       href="https://github.com/creativetimofficial/argon-design-system-react/blob/master/LICENSE.md"
                       target="_blank"
+                      style={{ color: "#fff", textDecoration: "underline" }}
                     >
                       MIT License
                     </NavLink>

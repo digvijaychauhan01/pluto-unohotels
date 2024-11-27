@@ -1,0 +1,87 @@
+.navbar-main {
+  transition: all 0.3s ease;
+  padding: 1rem 0;
+  background-color: transparent;
+
+  &.headroom--pinned {
+    transform: translateY(0%);
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+
+  &.headroom--unpinned {
+    transform: translateY(-100%);
+  }
+
+  &.headroom--top {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  &.headroom--not-top {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    
+    .nav-link-inner--text,
+    .navbar-brand {
+      color: #32325d !important;
+    }
+  }
+
+  .navbar-collapse {
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+
+  .navbar-toggler {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .nav-link {
+    padding: 1rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #5e72e4;
+    }
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-radius: 0.5rem;
+  }
+}
+
+// Add padding to body to prevent content from hiding behind fixed navbar
+body {
+  padding-top: 70px;
+}
+
+// Media query for larger screens
+@media (min-width: 992px) {
+  .navbar-main {
+    padding: 1rem 0;
+
+    .nav-link {
+      padding: 0.5rem 1rem;
+    }
+
+    .navbar-nav .nav-item {
+      margin-right: 0.5rem;
+    }
+  }
+
+  body {
+    padding-top: 90px;
+  }
+}
+
+// Smooth transitions for navbar elements
+.navbar-brand,
+.nav-link-inner--text,
+.navbar-toggler {
+  transition: all 0.3s ease;
+} 

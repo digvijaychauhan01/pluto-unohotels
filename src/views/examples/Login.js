@@ -1,193 +1,189 @@
-/*!
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { signIn } from "../../api/auth";
+import toast from "react-hot-toast";
+import "../../index.css";
 
-=========================================================
-* Argon Design System React - v1.1.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-design-system-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-design-system-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React from "react";
-
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
-
-// core components
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
-import SimpleFooter from "components/Footers/SimpleFooter.js";
 
-class Login extends React.Component {
-  componentDidMount() {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    this.refs.main.scrollTop = 0;
-  }
-  render() {
-    return (
-      <>
-        <DemoNavbar />
-        <main ref="main">
-          <section className="section section-shaped section-lg">
-            <div className="shape shape-style-1 bg-gradient-default">
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-            <Container className="pt-lg-7">
-              <Row className="justify-content-center">
-                <Col lg="5">
-                  <Card className="bg-secondary shadow border-0">
-                    <CardHeader className="bg-white pb-5">
-                      <div className="text-muted text-center mb-3">
-                        <small>Sign in with</small>
-                      </div>
-                      <div className="btn-wrapper text-center">
-                        <Button
-                          className="btn-neutral btn-icon"
-                          color="default"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <span className="btn-inner--icon mr-1">
-                            <img
-                              alt="..."
-                              src={
-                                require("assets/img/icons/common/github.svg")
-                                  .default
-                              }
-                            />
-                          </span>
-                          <span className="btn-inner--text">Github</span>
-                        </Button>
-                        <Button
-                          className="btn-neutral btn-icon ml-1"
-                          color="default"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <span className="btn-inner--icon mr-1">
-                            <img
-                              alt="..."
-                              src={
-                                require("assets/img/icons/common/google.svg")
-                                  .default
-                              }
-                            />
-                          </span>
-                          <span className="btn-inner--text">Google</span>
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardBody className="px-lg-5 py-lg-5">
-                      <div className="text-center text-muted mb-4">
-                        <small>Or sign in with credentials</small>
-                      </div>
-                      <Form role="form">
-                        <FormGroup className="mb-3">
-                          <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-email-83" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input placeholder="Email" type="email" />
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-lock-circle-open" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Password"
-                              type="password"
-                              autoComplete="off"
-                            />
-                          </InputGroup>
-                        </FormGroup>
-                        <div className="custom-control custom-control-alternative custom-checkbox">
+const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'phone'
+  const [formData, setFormData] = useState({
+    email: "",
+    phone: "",
+    password: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const loginData = {
+        password: formData.password,
+        [loginMethod]: formData[loginMethod]
+      };
+      
+      const authResponse = await signIn(loginData);
+      console.log('Auth Response:', authResponse);
+      
+      if (!authResponse.data?.token) {
+        throw new Error('Authentication failed: missing token');
+      }
+      
+      login(authResponse);
+      toast.success("Welcome back! Ready to plan your next stay?");
+      navigate("/");
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error(error.message || "Unable to sign in. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <DemoNavbar />
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-gray-900 to-gray-900">
+        <div className="container mx-auto px-[16px] h-full">
+          <div className="flex content-center items-center justify-center h-full pt-[80px]">
+            <div className="w-full lg:w-[500px] px-[16px]">
+              <div className="relative flex flex-col min-w-0 break-words w-full mb-[24px] shadow-lg rounded-[16px] bg-white border-0">
+                <div className="px-[32px] py-[32px]">
+                  <div className="text-center mb-[32px]">
+                    <h2 className="text-[32px] font-bold text-gray-800 mb-[8px]">
+                      Welcome Back
+                    </h2>
+                    <p className="text-gray-600 text-[16px]">
+                      Sign in to continue to your account
+                    </p>
+                  </div>
+
+                  {/* Login Method Toggle */}
+                  <div className="flex rounded-[8px] bg-gray-100 p-[4px] mb-[24px]">
+                    <button
+                      className={`flex-1 py-[8px] rounded-[6px] text-[14px] font-medium transition-all duration-200
+                        ${loginMethod === 'email' 
+                          ? 'bg-white shadow-sm text-blue-600' 
+                          : 'text-gray-600 hover:text-gray-800'}`}
+                      onClick={() => setLoginMethod('email')}
+                    >
+                      Email
+                    </button>
+                    <button
+                      className={`flex-1 py-[8px] rounded-[6px] text-[14px] font-medium transition-all duration-200
+                        ${loginMethod === 'phone' 
+                          ? 'bg-white shadow-sm text-blue-600' 
+                          : 'text-gray-600 hover:text-gray-800'}`}
+                      onClick={() => setLoginMethod('phone')}
+                    >
+                      Phone
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSubmit}>
+                    <div className="mb-[24px]">
+                      <label className="block text-gray-700 text-[14px] font-semibold mb-[8px]">
+                        {loginMethod === 'email' ? 'Email Address' : 'Phone Number'}
+                      </label>
+                      {loginMethod === 'email' ? (
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="w-full px-[16px] py-[12px] rounded-[8px] border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none text-[16px]"
+                          placeholder="name@example.com"
+                          required
+                        />
+                      ) : (
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 flex items-center pl-[16px] pointer-events-none">
+                            <span className="text-gray-500 text-[16px]">+91</span>
+                          </div>
                           <input
-                            className="custom-control-input"
-                            id=" customCheckLogin"
-                            type="checkbox"
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            className="w-full pl-[56px] pr-[16px] py-[12px] rounded-[8px] border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none text-[16px]"
+                            placeholder="Enter phone number"
+                            pattern="[0-9]{10}"
+                            maxLength="10"
+                            required
                           />
-                          <label
-                            className="custom-control-label"
-                            htmlFor=" customCheckLogin"
-                          >
-                            <span>Remember me</span>
-                          </label>
                         </div>
-                        <div className="text-center">
-                          <Button
-                            className="my-4"
-                            color="primary"
-                            type="button"
-                          >
-                            Sign in
-                          </Button>
+                      )}
+                    </div>
+
+                    <div className="mb-[24px]">
+                      <div className="flex justify-between items-center mb-[8px]">
+                        <label className="block text-gray-700 text-[14px] font-semibold">
+                          Password
+                        </label>
+                        <Link to="/forgot-password" className="text-[14px] text-blue-600 hover:text-blue-800">
+                          Forgot Password?
+                        </Link>
+                      </div>
+                      <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="w-full px-[16px] py-[12px] rounded-[8px] border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none text-[16px]"
+                        placeholder="Enter your password"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`w-full py-[12px] rounded-[8px] text-white font-semibold transition-all duration-200 text-[16px]
+                        ${loading 
+                          ? 'bg-blue-400 cursor-not-allowed' 
+                          : 'bg-blue-600 hover:bg-blue-700 hover:shadow-lg'}`}
+                    >
+                      {loading ? (
+                        <div className="flex items-center justify-center">
+                          <svg className="animate-spin h-[20px] w-[20px] mr-[12px] text-white" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Signing in...
                         </div>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                  <Row className="mt-3">
-                    <Col xs="6">
-                      <a
-                        className="text-light"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <small>Forgot password?</small>
-                      </a>
-                    </Col>
-                    <Col className="text-right" xs="6">
-                      <a
-                        className="text-light"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <small>Create new account</small>
-                      </a>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Container>
-          </section>
-        </main>
-        <SimpleFooter />
-      </>
-    );
-  }
-}
+                      ) : (
+                        "Sign in"
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="text-center mt-[24px]">
+                    <span className="text-gray-600 text-[14px]">Don't have an account? </span>
+                    <Link to="/register-page" className="text-blue-600 hover:text-blue-800 font-medium text-[14px]">
+                      Create one now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default Login;

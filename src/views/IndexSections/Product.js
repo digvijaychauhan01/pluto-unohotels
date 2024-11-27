@@ -4,6 +4,9 @@ import DemoNavbar from "components/Navbars/DemoNavbar";
 import Footer from "./Footer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Toaster, toast } from 'react-hot-toast';
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ImageGallerySkeleton = () => (
     <div className="animate-pulse">
@@ -19,7 +22,46 @@ const ImageGallerySkeleton = () => (
     </div>
 );
 
+// Time Selector Component
+const TimeSelector = ({ label, value, onChange, defaultTime }) => {
+    // Generate time options from 00:00 to 23:00
+    const timeOptions = Array.from({ length: 24 }, (_, hour) => {
+        const hourStr = hour.toString().padStart(2, '0');
+        const timeValue = `${hourStr}:00`;
+        const displayTime = new Date(`2000-01-01T${timeValue}`).toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+        return { value: timeValue, label: displayTime };
+    });
+
+    return (
+        <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">{label}</label>
+            <select
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                className="form-select block w-full px-3 py-2 text-base 
+                          border border-gray-300 rounded-md shadow-sm 
+                          focus:outline-none focus:ring-1 focus:ring-blue-500 
+                          focus:border-blue-500"
+            >
+                <option value="">Select time</option>
+                {timeOptions.map(({ value: timeValue, label: timeLabel }) => (
+                    <option key={timeValue} value={timeValue}>
+                        {timeLabel}
+                    </option>
+                ))}
+            </select>
+            <span className="text-xs text-gray-500">Default: {defaultTime}</span>
+        </div>
+    );
+};
+
 export default function HotelDetail() {
+    const { isAuthenticated, token, user } = useAuth();
+    const navigate = useNavigate();
     const [queryParams, setQueryParams] = useState({
         propertyId: "",
         city: "",
@@ -46,6 +88,8 @@ export default function HotelDetail() {
     const [numberOfNights, setNumberOfNights] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [validationError, setValidationError] = useState(null);
+    const [checkInTime, setCheckInTime] = useState("14:00"); // Default 2:00 PM
+    const [checkOutTime, setCheckOutTime] = useState("11:00"); // Default 11:00 AM
 
     console.log(selectedPrice);
 
@@ -280,67 +324,73 @@ export default function HotelDetail() {
 
     // Add this validation helper function
     const validateRoomRequirements = () => {
-        const requiredRooms = parseInt(queryParams.rooms) || calculateMinimumRooms(queryParams.adults, queryParams.children);
-        const currentTotalRooms = Object.values(selectedRoomPlans).reduce(
+        const totalAdults = parseInt(queryParams.adults) || 0;
+        const totalChildren = parseInt(queryParams.children) || 0;
+        const selectedRoomsCount = Object.values(selectedRoomPlans).reduce(
             (sum, plans) => sum + plans.reduce((roomSum, plan) => roomSum + plan.count, 0),
             0
         );
 
-        if (currentTotalRooms < requiredRooms) {
+        // Calculate minimum required rooms
+        const minRequiredRooms = calculateMinimumRooms(totalAdults, totalChildren);
+
+        if (selectedRoomsCount < minRequiredRooms) {
             return {
                 isValid: false,
-                message: `You need to select at least ${requiredRooms} room(s) for ${queryParams.adults} adults and ${queryParams.children} children`
+                message: `Please select at least ${minRequiredRooms} room(s) for ${totalAdults} adults and ${totalChildren} children.`
             };
         }
         return { isValid: true, message: '' };
     };
 
-    // Update handleRoomSelection function
-    const handleRoomSelection = (room, plan, rate) => {
-        setSelectedRoomPlans(prev => {
-            const currentRoomPlans = prev[room] || [];
-            const existingPlanIndex = currentRoomPlans.findIndex(p => p.plan === plan);
-            
-            if (existingPlanIndex >= 0) {
-                const updatedPlans = [...currentRoomPlans];
-                const newCount = updatedPlans[existingPlanIndex].count + 1;
-                
-                // Calculate base rate and extra charges
-                const baseRate = rate?.value || 0;
-                const extraCharges = calculateExtraCharges(baseRate, queryParams.adults, queryParams.children);
-                const totalRatePerNight = baseRate + extraCharges;
-
-                if (newCount <= 5) { // Max 5 rooms per plan
-                    updatedPlans[existingPlanIndex] = {
-                        ...updatedPlans[existingPlanIndex],
-                        count: newCount,
-                        rate: totalRatePerNight
-                    };
-                    return { ...prev, [room]: updatedPlans };
-                }
-                return prev;
-            } else {
-                const baseRate = rate?.value || 0;
-                const extraCharges = calculateExtraCharges(baseRate, queryParams.adults, queryParams.children);
-                const totalRatePerNight = baseRate + extraCharges;
-
-                return {
-                    ...prev,
-                    [room]: [...currentRoomPlans, { 
-                        plan, 
-                        rate: totalRatePerNight,
-                        count: 1,
-                        baseRate: baseRate
-                    }]
-                };
-            }
-        });
-
-        // Validate room requirements after selection
-        const validation = validateRoomRequirements();
-        setValidationError(validation.message);
+    // Helper function to calculate minimum required rooms
+    const calculateMinimumRooms = (adults, children) => {
+        // Base cases
+        if (adults <= 0) return 0;
+        if (adults <= 3 && children <= 1) return 1;
+        
+        // For more than 3 adults or more than 1 child
+        return Math.ceil(Math.max(
+            adults / 3, // Maximum 3 adults per room
+            (adults + children) / 4 // Maximum 4 total occupants per room
+        ));
     };
 
+    // Update handleRoomSelection function
+    const handleRoomSelection = (room, plan, rate) => {
+        setSelectedRoomPlans(prevPlans => {
+            const newPlans = { ...prevPlans };
+            
+            // If this room type already exists
+            if (newPlans[room]) {
+                // Find if this specific plan already exists
+                const existingPlanIndex = newPlans[room].findIndex(p => p.plan === plan);
+                
+                if (existingPlanIndex >= 0) {
+                    // Increment count for existing plan
+                    newPlans[room][existingPlanIndex].count += 1;
+                } else {
+                    // Add new plan for this room
+                    newPlans[room].push({
+                        plan,
+                        rate: rate.value,
+                        count: 1
+                    });
+                }
+            } else {
+                // Add new room type with first plan
+                newPlans[room] = [{
+                    plan,
+                    rate: rate.value,
+                    count: 1
+                }];
+            }
+            
+            return newPlans;
+        });
+    };
+
+    // Add function to decrease room count
     const handleDecreaseRoom = (room, plan) => {
         setSelectedRoomPlans(prev => {
             const currentRoomPlans = prev[room] || [];
@@ -364,25 +414,60 @@ export default function HotelDetail() {
 
     const calculateTotalPrice = () => {
         let total = 0;
-        Object.entries(selectedRoomPlans).forEach(([_, plans]) => {
+        
+        // Iterate through selected rooms and their plans
+        Object.entries(selectedRoomPlans).forEach(([room, plans]) => {
             plans.forEach(plan => {
-                // Rate already includes extra charges from handleRoomSelection
-                total += plan.rate * plan.count * numberOfNights;
+                // Base price calculation for 2 persons per room
+                const basePrice = plan.rate * plan.count * numberOfNights;
+                total += basePrice;
             });
         });
+
         return total;
     };
 
-    // Update handleReservation function
+    // Update handleReservation function with toasts
     const handleReservation = async () => {
+        // Check authentication first
+        if (!isAuthenticated || !token) {
+            // Save current URL to redirect back after login
+            const currentPath = window.location.pathname + window.location.search;
+            toast.error('Please login to make a reservation');
+            navigate(`/login-page?redirect=${encodeURIComponent(currentPath)}`);
+            return;
+        }
+
+        // Validate room requirements before proceeding
+        const validation = validateRoomRequirements();
+        if (!validation.isValid) {
+            setValidationError(validation.message);
+            return;
+        }
+
         setIsSubmitting(true);
+        setValidationError(null);
+
+        const loadingToast = toast.loading('Processing your reservation...');
 
         try {
-            // Prepare reservation data
+            // Format dates with selected check-in and check-out times
+            const [checkInHour] = (checkInTime || "14:00").split(':');
+            const [checkOutHour] = (checkOutTime || "11:00").split(':');
+
+            const checkInDateTime = new Date(startDate);
+            checkInDateTime.setHours(parseInt(checkInHour), 0, 0);
+
+            const checkOutDateTime = new Date(endDate);
+            checkOutDateTime.setHours(parseInt(checkOutHour), 0, 0);
+
             const reservationData = {
+                userId: user?._id,
                 propertyId: queryParams.propertyId,
-                checkInDate: formatDateToYYYYMMDD(startDate || new Date(queryParams.checkInDate)),
-                checkOutDate: formatDateToYYYYMMDD(endDate || new Date(queryParams.checkOutDate)),
+                checkInDate: checkInDateTime.toISOString(),
+                checkOutDate: checkOutDateTime.toISOString(),
+                checkInTime: checkInTime || "14:00",
+                checkOutTime: checkOutTime || "11:00",
                 numberOfNights,
                 totalAmount: calculateTotalPrice(),
                 rooms: Object.entries(selectedRoomPlans).map(([roomName, plans]) => 
@@ -395,62 +480,75 @@ export default function HotelDetail() {
                     }))
                 ).flat(),
                 guestDetails: {
+                    name: user?.username || user?.name,
+                    email: user?.email,
+                    phone: user?.phone,
                     adults: queryParams.adults,
                     children: queryParams.children
+                },
+                policies: {
+                    checkInTime: checkInTime || "14:00",
+                    checkOutTime: checkOutTime || "11:00",
+                    cancellationPolicy: "Free cancellation before 24 hours of check-in",
+                    houseRules: [
+                        "Valid ID proof required at check-in",
+                        "No pets allowed",
+                        "No smoking in rooms"
+                    ]
                 }
             };
 
-            // Make the API call
-            const response = await fetch('http://localhost:3000/api/bookings/create', {
+            const response = await fetch('http://localhost:3000/api/booking/createbooking', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Add token to headers
                 },
                 body: JSON.stringify(reservationData)
             });
 
             if (!response.ok) {
-                throw new Error('Booking failed');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Booking failed');
             }
 
             const result = await response.json();
             
-            // Redirect to payment/confirmation page with booking details
-            window.location.href = `/booking-confirmation?bookingId=${result.bookingId}&totalAmount=${calculateTotalPrice()}`;
+            toast.dismiss(loadingToast);
+            toast.success('Reservation successful! Redirecting...');
+
+            // Redirect to confirmation page
+            setTimeout(() => {
+                navigate(`/booking-confirmation?bookingId=${result.data._id}&totalAmount=${calculateTotalPrice()}`);
+            }, 1500);
+
         } catch (error) {
             console.error('Reservation failed:', error);
-            alert('Failed to make reservation. Please try again.');
+            toast.dismiss(loadingToast);
+            toast.error(error.message || 'Failed to make reservation. Please try again.');
+            setValidationError('Failed to make reservation. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const calculateMinimumRooms = (adults, children) => {
-        if (adults <= 2 && children <= 2) return 1;
-        if (adults === 3 || adults === 4) return 2;
-        if (adults <= 2 && children > 2) return 2;
-        return Math.ceil(adults / 2);
-    };
-
-
-    const calculateExtraCharges = (baseRate, adults, children) => {
-        let extraCharges = 0;
-        
-        // Extra adult charges (beyond 2 adults)
-        if (adults > 2) {
-            extraCharges += (adults - 2) * (baseRate * 0.3); // 30% of base rate
-        }
-        
-        // Child charges
-        if (children > 0) {
-            extraCharges += children * (baseRate * 0.15); // 15% of base rate
-        }
-        
-        return extraCharges;
-    };
-
+    // Add toast container to your JSX
     return (
         <>
+            <Toaster 
+                toastOptions={{
+                    // Default options for all toasts
+                    duration: 4000,
+                    style: {
+                        padding: '16px',
+                        borderRadius: '8px',
+                        fontSize: '14px',
+                        maxWidth: '500px',
+                        fontWeight: '500',
+                    },
+                }}
+            />
+
             <DemoNavbar />
             <div className={`${styles.hotelDetail} max-w-[1400px] mx-auto`}>
                 <div className="container-fluid">
@@ -535,7 +633,7 @@ export default function HotelDetail() {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-8">
-                            <section className="bg-white p-6 rounded-5 shadow-lg mb-4 mt-4">
+                            <section className="bg-white p-[20px] rounded-5 shadow-lg mb-4 mt-4">
                                 {/* Hotel Name and Rating */}
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-3xl font-bold text-gray-800">{hotel?.name}</h2>
@@ -579,48 +677,53 @@ export default function HotelDetail() {
                                 </div>
 
                                 {/* Contact Information Grid */}
-                                <div className="grid md:grid-cols-3 gap-4">
-                                    {/* Phone */}
-                                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                                        <div className="p-2 bg-blue-100 rounded-full">
-                                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                                                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                            </svg>
+                                <div className="space-y-4">
+                                    {/* Phone and Email Row */}
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        {/* Phone */}
+                                        <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                            <div className="p-2 bg-blue-100 rounded-full">
+                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                                                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div className="text-sm text-gray-500 mb-1">Phone</div>
+                                                <div className="font-medium text-gray-900">{hotel.contact.phone}</div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div className="text-sm text-gray-500 mb-1">Phone</div>
-                                            <div className="font-medium text-gray-900">{hotel.contact.phone}</div>
+
+                                        {/* Email */}
+                                        <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                            <div className="p-2 bg-blue-100 rounded-full">
+                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                                                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div className="text-sm text-gray-500 mb-1">Email</div>
+                                                <div className="font-medium text-gray-900 break-all">{hotel.contact.email}</div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Email */}
-                                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                                        <div className="p-2 bg-blue-100 rounded-full">
-                                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                                                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm text-gray-500 mb-1">Email</div>
-                                            <div className="font-medium text-gray-900 break-all">{hotel.contact.email}</div>
-                                        </div>
-                                    </div>
-
-                                    {/* Address */}
-                                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                                        <div className="p-2 bg-blue-100 rounded-full">
-                                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                                                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                                                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <div className="text-sm text-gray-500 mb-1">Address</div>
-                                            <div className="font-medium text-gray-900">{hotel.contact.address}</div>
+                                    {/* Address Row */}
+                                    <div className="w-full">
+                                        <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                            <div className="p-2 bg-blue-100 rounded-full">
+                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                                                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                                                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div className="text-sm text-gray-500 mb-1">Address</div>
+                                                <div className="font-medium text-gray-900">{hotel.contact.address}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -645,39 +748,49 @@ export default function HotelDetail() {
                             {/* Combined Section for Amenities and Room Categories */}
                             <section className="bg-white p-4 rounded-5 shadow-lg mb-4">
                                 {/* Amenities Section */}
-                                <div className="mb-4 ">
-                                    <h3 className="mb-3">Amenities</h3>
-                                    <ul className="list-unstyled d-flex flex-wrap">
+                                <div className="mb-2">
+                                    <h3 className="text-2xl font-semibold text-gray-800 mb-4">Property Amenities</h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                         {hotel.amenities && hotel.amenities.length > 0 ? (
                                             hotel.amenities.map((amenity, index) => (
-                                                <li
+                                                <div
                                                     key={index}
-                                                    className="d-inline-block mx-2 my-1"
-                                                    style={{
-                                                        color: "black", // Black text color for the amenity name
-                                                        marginRight: "12px", // Spacing between the dots
-                                                    }}
+                                                    className="flex items-center p-3 bg-white rounded-lg border border-gray-100 
+                                                             hover:border-blue-200 hover:shadow-sm transition-all duration-200"
                                                 >
-                                                    <span
-                                                        style={{
-                                                            color: "#28a745", // Green color for the dot
-                                                            marginRight: "8px", // Space between the dot and the text
-                                                        }}
-                                                    >
-                                                        •
-                                                    </span>
-                                                    {amenity} {/* Display the amenity name */}
-                                                </li>
+                                                    {/* Icon based on amenity type */}
+                                                    <div className="mr-3 text-blue-600">
+                                                        {getAmenityIcon(amenity)}
+                                                    </div>
+                                                    <span className="text-gray-700 font-medium">{amenity}</span>
+                                                </div>
                                             ))
                                         ) : (
-                                            <p>No amenities available.</p> // Fallback if amenities are not available
+                                            <div className="col-span-full text-center py-8 bg-gray-50 rounded-lg">
+                                                <svg 
+                                                    className="w-12 h-12 mx-auto text-gray-400 mb-3" 
+                                                    fill="none" 
+                                                    stroke="currentColor" 
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path 
+                                                        strokeLinecap="round" 
+                                                        strokeLinejoin="round" 
+                                                        strokeWidth="2" 
+                                                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                                                    />
+                                                </svg>
+                                                <p className="text-gray-500">No amenities available</p>
+                                            </div>
                                         )}
-                                    </ul>
+                                    </div>
                                 </div>
+                                </section>
                                 {/* Room Categories and Pricing Section */}
+                                <section className="bg-white p-4 rounded-5 shadow-lg mb-4">
                                 <div>
-                                    <div className="d-flex justify-content-between align-items-center mb-3">
-                                        <h4 className="m-0">Choose your room(s)</h4>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h4 className="m-0 text-2xl font-semibold text-gray-800 ">Choose your room(s)</h4>
                                         <button
                                             className="btn btn-secondary rounded-5 shadow-md"
                                             style={{ borderRadius: "8px" }}
@@ -847,7 +960,7 @@ export default function HotelDetail() {
                             </section>
 
                             {/* Cancellation Policy Section */}
-                            <section className="bg-white p-6 rounded-5 shadow-lg mb-4 mt-3">
+                            <section className="bg-white p-[30px] rounded-5 shadow-lg mb-4 mt-3">
                                 <div className="flex items-center gap-3 mb-4">
                                     <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
@@ -911,7 +1024,7 @@ export default function HotelDetail() {
                                 </div>
                             </section>
                             {/* Reviews Section */}
-                            <section className="bg-white mt-4 p-6 rounded-5 shadow-lg mb-4">
+                            <section className="bg-white mt-4 p-[35px] rounded-5 shadow-lg mb-4">
                                 <div className="flex items-center justify-between mb-6">
                                     <div>
                                         <h3 className="text-2xl font-bold mb-1">Guest Reviews</h3>
@@ -925,7 +1038,7 @@ export default function HotelDetail() {
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors">
+                                    <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
                                         Write a Review
                                     </button>
                                 </div>
@@ -958,7 +1071,7 @@ export default function HotelDetail() {
                                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
                                                                               d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" 
-                                                                        />
+                                                                              />
                                                                     </svg>
                                                                 </button>
                                                                 <span className="text-sm text-gray-500">Helpful</span>
@@ -1030,12 +1143,14 @@ export default function HotelDetail() {
                                     <h3 className="text-xl font-semibold mb-3">Your Selection</h3>
                                     {Object.entries(selectedRoomPlans).map(([room, plans]) => (
                                         plans.map(plan => (
-                                            <div key={`${room}-${plan.plan}`} className="flex justify-between items-center mb-2 pb-2 border-b">
+                                            <div key={`${room}-${plan.plan}`} className="flex justify-between items-center mb-2">
                                                 <div>
                                                     <div className="font-medium">{room}</div>
-                                                    <div className="text-sm text-gray-600">{plan.plan}</div>
+                                                    <div className="text-sm text-gray-600">
+                                                        {plan.plan} × {plan.count} room(s)
+                                                    </div>
                                                     <div className="text-xs text-gray-500">
-                                                        {plan.count} {plan.count === 1 ? 'room' : 'rooms'} × {numberOfNights} {numberOfNights === 1 ? 'night' : 'nights'}
+                                                        (2 adults per room)
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
@@ -1093,31 +1208,49 @@ export default function HotelDetail() {
                                         </div>
                                     </div>
 
-                                    <div className="row mb-3">
-                                        <div className="col-md-6">
-                                            <label htmlFor="checkinTime" className="form-label">
-                                                Check-in Time
-                                            </label>
-                                            <input
-                                                type="time"
-                                                id="checkinTime"
-                                                className="form-control shadow-sm"
-                                                required
-                                                defaultValue="14:00"
-                                            />
-                                        </div>
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <TimeSelector
+                                            label="Check-in Time"
+                                            value={checkInTime}
+                                            onChange={setCheckInTime}
+                                            defaultTime="2:00 PM"
+                                        />
+                                        <TimeSelector
+                                            label="Check-out Time"
+                                            value={checkOutTime}
+                                            onChange={setCheckOutTime}
+                                            defaultTime="11:00 AM"
+                                        />
+                                    </div>
 
-                                        <div className="col-md-6">
-                                            <label htmlFor="checkoutTime" className="form-label">
-                                                Check-out Time
-                                            </label>
-                                            <input
-                                                type="time"
-                                                id="checkoutTime"
-                                                className="form-control shadow-sm"
-                                                required
-                                                defaultValue="11:00"
-                                            />
+                                    {/* Display selected times */}
+                                    <div className="text-sm text-gray-600 mt-2">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path 
+                                                    strokeLinecap="round" 
+                                                    strokeLinejoin="round" 
+                                                    strokeWidth="2" 
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" 
+                                                />
+                                            </svg>
+                                            <span>
+                                                Check-in: {checkInTime ? 
+                                                    `${new Date(`2000-01-01T${checkInTime}`).toLocaleTimeString([], { 
+                                                        hour: '2-digit', 
+                                                        minute: '2-digit' 
+                                                    })}` : 
+                                                    '2:00 PM'
+                                                } 
+                                                • 
+                                                Check-out: {checkOutTime ? 
+                                                    `${new Date(`2000-01-01T${checkOutTime}`).toLocaleTimeString([], { 
+                                                        hour: '2-digit', 
+                                                        minute: '2-digit' 
+                                                    })}` : 
+                                                    '11:00 AM'
+                                                }
+                                            </span>
                                         </div>
                                     </div>
 
@@ -1295,6 +1428,20 @@ export default function HotelDetail() {
               .h-[400px] {
                 height: 400px;
               }
+
+              /* Add these styles to your CSS if not using Tailwind */
+              .form-select {
+                appearance: none;
+                background-image: url("data:image/svg+xml,..."); /* Add a custom dropdown arrow */
+                background-repeat: no-repeat;
+                background-position: right 0.5rem center;
+                background-size: 1.5em 1.5em;
+              }
+
+              .form-select:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+              }
             `}</style>
                     </div>
                 </div>
@@ -1303,3 +1450,54 @@ export default function HotelDetail() {
         </>
     );
 }
+
+// Add this helper function to get icons for different amenities
+const getAmenityIcon = (amenity) => {
+    const amenityLower = amenity.toLowerCase();
+    
+    // Return appropriate icon based on amenity type
+    switch (true) {
+        case amenityLower.includes('wifi'):
+            return (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          d="M8.111 16.404a5.5 5.5 0 017.778 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            );
+        case amenityLower.includes('parking'):
+            return (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+            );
+        case amenityLower.includes('pool'):
+            return (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+            );
+        case amenityLower.includes('restaurant'):
+            return (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            );
+        case amenityLower.includes('gym') || amenityLower.includes('fitness'):
+            return (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+            );
+        default:
+            return (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                          d="M5 13l4 4L19 7" />
+                </svg>
+            );
+    }
+};

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from "headroom.js";
 import { Badge } from "reactstrap";
+import { useAuth } from "../../context/AuthContext";
 
 // reactstrap components
 import {
@@ -24,10 +25,26 @@ import {
 } from "reactstrap";
 import Modals from "views/IndexSections/Modals";
 
+// Create a functional wrapper to use the useAuth hook
+const DemoNavbarWithAuth = () => {
+  const { user, handleSignOut } = useAuth();
+  return <DemoNavbar user={user} handleSignOut={handleSignOut} />;
+};
+
 class DemoNavbar extends React.Component {
   componentDidMount() {
-    let headroom = new Headroom(document.getElementById("navbar-main"));
-    // initialise
+    // Configure Headroom
+    let headroom = new Headroom(document.getElementById("navbar-main"), {
+      offset: 300, // Distance in px before element starts showing/hiding
+      tolerance: 10, // Scroll tolerance in px before state changes
+      classes: {
+        initial: "headroom",
+        pinned: "headroom--pinned",
+        unpinned: "headroom--unpinned",
+        top: "headroom--top",
+        notTop: "headroom--not-top",
+      }
+    });
     headroom.init();
   }
   state = {
@@ -48,18 +65,29 @@ class DemoNavbar extends React.Component {
   };
 
   render() {
+    const { user, handleSignOut } = this.props;
+
+    // Function to display user identifier (email or phone)
+    const getUserDisplayName = (user) => {
+      if (!user) return '';
+      if (user.username) return user.username;
+      if (user.email) return user.email.split('@')[0];
+      if (user.phone) return `+91 ${user.phone}`;
+      return 'User';
+    };
+
     return (
       <>
         <header className="header-global">
           <Navbar
-            className="navbar-main navbar-transparent navbar_custom navbar-light "
+            className="navbar-main fixed-top navbar-transparent navbar-light headroom !p-0"
             expand="lg"
             id="navbar-main"
           >
-            <Container>
-              <NavbarBrand className="mr-lg-5 mt-3" to="/" tag={Link}>
+            <Container className="py-[12px]">
+              <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <img
-                  className="logo_cus"
+                  className="h-[40px]"
                   alt="..."
                   src={require("assets/img/brand/unob.png")}
                 />
@@ -240,6 +268,68 @@ class DemoNavbar extends React.Component {
                   </Link>
                 </Nav>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
+                  {user ? (
+                    <UncontrolledDropdown nav>
+                      <DropdownToggle nav className="px-[16px] py-[8px] flex items-center">
+                        <div className="w-[32px] h-[32px] rounded-full bg-blue-100 flex items-center justify-center mr-[8px]">
+                          <span className="text-blue-600 font-medium text-[14px]">
+                            {getUserDisplayName(user).charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <span className="nav-link-inner--text text-[14px]">
+                          {getUserDisplayName(user)}
+                        </span>
+                      </DropdownToggle>
+                      <DropdownMenu right className="py-[8px]">
+                        <DropdownItem 
+                          className="px-[16px] py-[8px]"
+                          to="/profile-page" 
+                          tag={Link}
+                        >
+                          <i className="ni ni-single-02 mr-[8px]" />
+                          My Profile
+                        </DropdownItem>
+                        <DropdownItem 
+                          className="px-[16px] py-[8px]"
+                          to="/bookings" 
+                          tag={Link}
+                        >
+                          <i className="ni ni-calendar-grid-58 mr-[8px]" />
+                          My Bookings
+                        </DropdownItem>
+                        <DropdownItem divider className="my-[4px]" />
+                        <DropdownItem 
+                          className="px-[16px] py-[8px] text-red-600 hover:text-red-700"
+                          onClick={handleSignOut}
+                        >
+                          <i className="ni ni-user-run mr-[8px]" />
+                          Sign Out
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  ) : (
+                    <>
+                      <NavItem>
+                        <NavLink 
+                          to="/login-page" 
+                          tag={Link}
+                          className="px-[16px] py-[8px]"
+                        >
+                          <span className="nav-link-inner--text">Sign In</span>
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink 
+                          to="/register-page" 
+                          tag={Link}
+                          className="px-[16px] py-[8px]"
+                        >
+                          <span className="nav-link-inner--text">Register</span>
+                        </NavLink>
+                      </NavItem>
+                    </>
+                  )}
+
                   <NavItem>
                     <NavLink
                       className="nav-link-icon email_top_head"
@@ -256,7 +346,6 @@ class DemoNavbar extends React.Component {
                     </UncontrolledTooltip>
                   </NavItem>
 
-
                   <NavItem className="d-none d-lg-block ml-lg-4">
                     <Modals />
                   </NavItem>
@@ -270,4 +359,43 @@ class DemoNavbar extends React.Component {
   }
 }
 
-export default DemoNavbar;
+// Add some custom CSS for the dropdown
+const dropdownStyles = `
+.dropdown-menu {
+  min-width: 200px;
+  margin-top: 8px;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}
+
+.dropdown-item {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #f8fafc;
+  }
+  
+  i {
+    font-size: 14px;
+  }
+}
+
+.dropdown-divider {
+  margin: 4px 0;
+  border-color: #e2e8f0;
+}
+`;
+
+// Add this to your styles
+const userAvatarStyles = `
+.user-avatar {
+  background: linear-gradient(45deg, #4299e1, #667eea);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+`;
+
+// Export the wrapped component
+export default DemoNavbarWithAuth;
