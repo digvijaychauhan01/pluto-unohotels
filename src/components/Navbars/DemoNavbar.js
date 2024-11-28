@@ -291,7 +291,7 @@ class DemoNavbar extends React.Component {
                         </DropdownItem>
                         <DropdownItem 
                           className="px-[16px] py-[8px]"
-                          to="/bookings" 
+                          to="/my-bookings" 
                           tag={Link}
                         >
                           <i className="ni ni-calendar-grid-58 mr-[8px]" />
@@ -299,6 +299,7 @@ class DemoNavbar extends React.Component {
                         </DropdownItem>
                         <DropdownItem divider className="my-[4px]" />
                         <DropdownItem 
+                        to="/bookings" 
                           className="px-[16px] py-[8px] text-red-600 hover:text-red-700"
                           onClick={handleSignOut}
                         >

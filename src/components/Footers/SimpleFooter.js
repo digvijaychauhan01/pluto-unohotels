@@ -26,8 +26,9 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip,
 } from "reactstrap";
+// Import the logo
+import unoLogo from "../../assets/img/brand/uno.jpeg";
 
 class SimpleFooter extends React.Component {
   render() {
@@ -36,83 +37,60 @@ class SimpleFooter extends React.Component {
         <footer className="footer" style={{ backgroundColor: "#000", color: "#fff", padding: "2rem 0" }}>
           <Container>
             <Row className="row-grid align-items-center mb-5">
-              <Col lg="6">
-                <h3 className="text-primary font-weight-light mb-2" style={{ color: "#fff" }}>
-                  Thank you for supporting us!
-                </h3>
+              <Col lg="4">
+                <div className="mb-3">
+                  <img
+                    src={unoLogo}
+                    alt="UNO Hotels & Resorts"
+                    style={{ 
+                      height: "40px",
+                      marginBottom: "1rem"
+                    }}
+                  />
+                </div>
                 <h4 className="mb-0 font-weight-light" style={{ color: "#ccc" }}>
-                  Let's get in touch on any of these platforms.
+                  Luxury Stays & Memorable Experiences
                 </h4>
               </Col>
-              <Col className="text-lg-center btn-wrapper" lg="6">
-                <Button
-                  className="btn-icon-only rounded-circle"
-                  color="twitter"
-                  href="https://twitter.com/creativetim"
-                  id="tooltip475038074"
-                  target="_blank"
-                  style={{ backgroundColor: "#1DA1F2", borderColor: "#1DA1F2", transition: "transform 0.3s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                >
-                  <span className="btn-inner--icon">
-                    <i className="fa fa-twitter" />
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip475038074">
-                  Follow us
-                </UncontrolledTooltip>
-                <Button
-                  className="btn-icon-only rounded-circle ml-1"
-                  color="facebook"
-                  href="https://www.facebook.com/creativetim"
-                  id="tooltip837440414"
-                  target="_blank"
-                  style={{ backgroundColor: "#3b5998", borderColor: "#3b5998", transition: "transform 0.3s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                >
-                  <span className="btn-inner--icon">
-                    <i className="fa fa-facebook-square" />
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip837440414">
-                  Like us
-                </UncontrolledTooltip>
-                <Button
-                  className="btn-icon-only rounded-circle ml-1"
-                  color="dribbble"
-                  href="https://dribbble.com/creativetim"
-                  id="tooltip829810202"
-                  target="_blank"
-                  style={{ backgroundColor: "#ea4c89", borderColor: "#ea4c89", transition: "transform 0.3s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                >
-                  <span className="btn-inner--icon">
-                    <i className="fa fa-dribbble" />
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip829810202">
-                  Follow us
-                </UncontrolledTooltip>
-                <Button
-                  className="btn-icon-only rounded-circle ml-1"
-                  color="github"
-                  href="https://github.com/creativetimofficial"
-                  id="tooltip495507257"
-                  target="_blank"
-                  style={{ backgroundColor: "#333", borderColor: "#333", transition: "transform 0.3s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                >
-                  <span className="btn-inner--icon">
-                    <i className="fa fa-github" />
-                  </span>
-                </Button>
-                <UncontrolledTooltip delay={0} target="tooltip495507257">
-                  Star on Github
-                </UncontrolledTooltip>
+              <Col lg="4" className="text-center">
+                <h4 className="mb-3" style={{ color: "#fff" }}>Contact Us</h4>
+                <p style={{ color: "#ccc" }}>
+                  <i className="ni ni-pin-3 mr-2"></i>
+                  123 Hotel Street, City, State
+                </p>
+                <p style={{ color: "#ccc" }}>
+                  <i className="ni ni-mobile-button mr-2"></i>
+                  +91 1234567890
+                </p>
+                <p style={{ color: "#ccc" }}>
+                  <i className="ni ni-email-83 mr-2"></i>
+                  info@unohotels.com
+                </p>
+              </Col>
+              <Col lg="4" className="text-lg-right">
+                <h4 className="mb-3" style={{ color: "#fff" }}>Quick Links</h4>
+                <Nav vertical>
+                  <NavItem>
+                    <NavLink href="/rooms" style={{ color: "#ccc", padding: "0.3rem 0" }}>
+                      Our Rooms
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink href="/dining" style={{ color: "#ccc", padding: "0.3rem 0" }}>
+                      Dining
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink href="/amenities" style={{ color: "#ccc", padding: "0.3rem 0" }}>
+                      Amenities
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink href="/contact" style={{ color: "#ccc", padding: "0.3rem 0" }}>
+                      Contact
+                    </NavLink>
+                  </NavItem>
+                </Nav>
               </Col>
             </Row>
             <hr style={{ borderColor: "#444" }} />
@@ -120,52 +98,28 @@ class SimpleFooter extends React.Component {
               <Col md="6">
                 <div className="copyright" style={{ color: "#ccc" }}>
                   © {new Date().getFullYear()}{" "}
-                  <a
-                    href="https://www.creative-tim.com?ref=adsr-footer"
-                    target="_blank"
-                    style={{ color: "#fff", textDecoration: "underline" }}
-                  >
-                    Creative Tim
-                  </a>
-                  .
+                  <span style={{ color: "#fff" }}>
+                    UNO Hotels & Resorts
+                  </span>
+                  . All rights reserved.
                 </div>
               </Col>
               <Col md="6">
                 <Nav className="nav-footer justify-content-end">
                   <NavItem>
                     <NavLink
-                      href="https://www.creative-tim.com?ref=adsr-footer"
-                      target="_blank"
-                      style={{ color: "#fff", textDecoration: "underline" }}
+                      href="/privacy"
+                      style={{ color: "#ccc" }}
                     >
-                      Creative Tim
+                      Privacy Policy
                     </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      href="https://www.creative-tim.com/presentation?ref=adsr-footer"
-                      target="_blank"
-                      style={{ color: "#fff", textDecoration: "underline" }}
+                      href="/terms"
+                      style={{ color: "#ccc" }}
                     >
-                      About Us
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="http://blog.creative-tim.com?ref=adsr-footer"
-                      target="_blank"
-                      style={{ color: "#fff", textDecoration: "underline" }}
-                    >
-                      Blog
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="https://github.com/creativetimofficial/argon-design-system-react/blob/master/LICENSE.md"
-                      target="_blank"
-                      style={{ color: "#fff", textDecoration: "underline" }}
-                    >
-                      MIT License
+                      Terms & Conditions
                     </NavLink>
                   </NavItem>
                 </Nav>

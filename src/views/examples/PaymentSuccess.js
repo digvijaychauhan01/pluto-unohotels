@@ -19,7 +19,7 @@ const PaymentSuccess = () => {
     useEffect(() => {
         const fetchPaymentDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/payment/details/${paymentId}`, {
+                const response = await fetch(`http://localhost:3000/api/orders/status/${orderId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ const PaymentSuccess = () => {
         if (paymentId) {
             fetchPaymentDetails();
         }
-    }, [paymentId, token]);
+    }, [orderId, paymentId, token]);
 
     if (loading) {
         return (
@@ -63,19 +63,68 @@ const PaymentSuccess = () => {
         );
     }
 
+    const formatDate = (dateString) => {
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return 'N/A';
+            }
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch (error) {
+            return 'N/A';
+        }
+    };
+    
+
     return (
         <>
             <DemoNavbar />
-            <div className="min-h-screen bg-gray-100 pt-[100px] pb-[64px]">
+            <div className="min-h-screen bg-gray-100 pt-[100px] pb-[64px] rounded-xl">
                 <Container>
                     <Card className="shadow-lg border-0">
+                        {/* Stylish Brand Header */}
+                        <div className="relative bg-white p-[24px] border-b rounded-xl">
+                            <div className="flex items-center justify-between">
+                                {/* Left side - Brand */}
+                                <div className="flex flex-col rounded-xl">
+                                    <h1 className="text-[24px] font-bold text-gray-800 tracking-tight">
+                                        UNO
+                                        <span className="text-green-500"> Hotels & Resorts</span>
+                                    </h1>
+                                    <div className="h-[2px] w-[60px] bg-green-500 mt-[2px]"></div>
+                                </div>
+
+                                {/* Right side - Thank you message */}
+                                <div className="flex flex-col items-end">
+                                    <h2 className="text-[18px] text-gray-600 font-medium italic">
+                                        Thank you for choosing us
+                                    </h2>
+                                    <div className="h-[2px] w-[40px] bg-green-500 mt-[2px]"></div>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Success Header */}
-                        <div className="text-center p-[32px] bg-gradient-to-r from-green-500 to-green-600 rounded-t">
+                        <div className="text-center p-[32px] ml-[30px] mr-[30px] rounded-xl bg-gradient-to-r from-green-500 to-green-600">
                             <div className="w-[80px] h-[80px] bg-white rounded-full flex items-center justify-center mx-auto mb-[24px] shadow-lg">
                                 <i className="ni ni-check-bold text-[40px] text-green-500"></i>
                             </div>
                             <h2 className="text-[28px] font-bold text-white mb-[8px]">Payment Successful!</h2>
-                            <p className="text-green-100">Thank you for your booking</p>
+                            <p className="text-green-100 mb-[16px]">Thank you for choosing UNO Hotels & Resorts</p>
+                            
+                            {/* Property Name Section */}
+                            <div className="mt-[16px] p-[16px] bg-white/10 rounded-lg backdrop-blur-sm">
+                                <h3 className="text-[20px] font-semibold text-white">
+                                    {paymentDetails?.bookingId?.propertyId?.propertyName || "UNO Resort"}
+                                </h3>
+                                <p className="text-green-100">
+                                    {paymentDetails?.bookingId?.propertyId?.location?.city}, {paymentDetails?.bookingId?.propertyId?.location?.state}
+                                </p>
+                            </div>
                         </div>
 
                         <div className="p-[32px] space-y-[32px]">
@@ -86,33 +135,38 @@ const PaymentSuccess = () => {
                                 </h3>
                                 <Row className="g-4">
                                     <Col md="3" sm="6">
-                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm">
+                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm h-[140px] flex flex-col justify-center">
                                             <i className="ni ni-credit-card text-[24px] text-green-500 mb-[8px]"></i>
                                             <p className="text-sm text-gray-600 mb-[4px]">Transaction ID</p>
-                                            <p className="font-semibold">{paymentId}</p>
+                                            <p className="font-semibold truncate" title={paymentId}>{paymentId}</p>
                                         </div>
                                     </Col>
                                     <Col md="3" sm="6">
-                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm">
+                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm h-[140px] flex flex-col justify-center">
                                             <i className="ni ni-money-coins text-[24px] text-green-500 mb-[8px]"></i>
                                             <p className="text-sm text-gray-600 mb-[4px]">Amount Paid</p>
-                                            <p className="font-semibold">₹{paymentDetails?.amount / 100}</p>
+                                            <p className="font-semibold">₹{paymentDetails?.amount}</p>
                                         </div>
                                     </Col>
                                     <Col md="3" sm="6">
-                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm">
+                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm h-[140px] flex flex-col justify-center">
                                             <i className="ni ni-calendar-grid-58 text-[24px] text-green-500 mb-[8px]"></i>
                                             <p className="text-sm text-gray-600 mb-[4px]">Payment Date</p>
                                             <p className="font-semibold">
-                                                {new Date(paymentDetails?.created_at).toLocaleDateString()}
+                                                {formatDate(paymentDetails?.createdAt)}
                                             </p>
                                         </div>
                                     </Col>
                                     <Col md="3" sm="6">
-                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm">
-                                            <i className="ni ni-tag text-[24px] text-green-500 mb-[8px]"></i>
-                                            <p className="text-sm text-gray-600 mb-[4px]">Payment Method</p>
-                                            <p className="font-semibold">{paymentDetails?.method}</p>
+                                        <div className="text-center p-[16px] bg-white rounded-lg shadow-sm h-[140px] flex flex-col justify-center hover:shadow-md transition-shadow">
+                                            <i className="ni ni-building text-[24px] text-green-500 mb-[8px]"></i>
+                                            <p className="text-sm text-gray-600 mb-[4px]">Property</p>
+                                            <p className="font-semibold text-sm truncate">
+                                                {paymentDetails?.propertyId?.propertyName || "UNO Resort"}
+                                            </p>
+                                            <p className="text-xs text-gray-500 mt-1 truncate" title={paymentDetails?.bookingId?.propertyId?.location?.address}>
+                                                {paymentDetails?.bookingId?.propertyId?.location?.city}, {paymentDetails?.bookingId?.propertyId?.location?.state}
+                                            </p>
                                         </div>
                                     </Col>
                                 </Row>

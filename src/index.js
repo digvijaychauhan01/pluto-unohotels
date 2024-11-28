@@ -19,6 +19,7 @@ import Product from "views/IndexSections/Product";
 import Gallery from "views/IndexSections/Gallery";
 import BookingConfirmation from "views/examples/BookingConfirmation";
 import PaymentSuccess from "views/examples/PaymentSuccess.js";
+import MyBookings from "views/examples/MyBookings";
 
 const ProtectedRoute = ({ children }) => {
   const storedUser = localStorage.getItem('user');
@@ -74,7 +75,11 @@ root.render(
           </ProtectedRoute>
         } />
         <Route path="/payment-success" element={<PaymentSuccess />} />
-
+        <Route path="/my-bookings" element={
+          <ProtectedRoute>
+            <MyBookings />
+          </ProtectedRoute>
+        } />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
