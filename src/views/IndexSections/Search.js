@@ -4,6 +4,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
+import config from "config";
 
 const EnhancedSearch = () => {
   const [isGuestsOpen, setIsGuestsOpen] = useState(false);
@@ -25,7 +26,7 @@ const EnhancedSearch = () => {
   // Fetch hotels based on selected city
   useEffect(() => {
     if (city) {
-      fetch(`http://localhost:3000/api/property/get-hotels-by-city/${city}`)
+      fetch(`${config.API_HOST}/api/property/get-hotels-by-city/${city}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.success && Array.isArray(data.data)) {

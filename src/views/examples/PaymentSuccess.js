@@ -5,7 +5,7 @@ import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
-
+import config from "../../config";
 const PaymentSuccess = () => {
     const [searchParams] = useSearchParams();
     const [paymentDetails, setPaymentDetails] = useState(null);
@@ -19,7 +19,7 @@ const PaymentSuccess = () => {
     useEffect(() => {
         const fetchPaymentDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/orders/status/${orderId}`, {
+                const response = await fetch(`${config.API_HOST}/api/orders/status/${orderId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'

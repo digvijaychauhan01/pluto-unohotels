@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Toaster, toast } from 'react-hot-toast';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 const ImageGallerySkeleton = () => (
     <div className="animate-pulse">
@@ -191,7 +192,7 @@ export default function HotelDetail() {
             setIsLoading(true); // Start loading
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/property/get-property-by-id/${queryParams.propertyId}`
+                    `${config.API_HOST}/api/property/get-property-by-id/${queryParams.propertyId}`
                 );
                 if (!response.ok) {
                     throw new Error(`Error: ${response.statusText}`);
@@ -498,7 +499,7 @@ export default function HotelDetail() {
                 }
             };
 
-            const response = await fetch('http://localhost:3000/api/booking/createbooking', {
+            const response = await fetch(`${config.API_HOST}/api/booking/createbooking`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -28,6 +28,7 @@
     grid-column: 1;
     /* Span one column */
     height: 400px;
+    min-height: 460px;
     /* Adjust height as needed */
 }
 

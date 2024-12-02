@@ -87,21 +87,23 @@ const BookingConfirmation = () => {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    amount: parseInt(totalAmount) * 100,
+                    amount: parseInt(totalAmount, 10) * 100,
                     currency: 'INR',
                     bookingId: bookingId
                 })
             });
 
             if (!orderResponse.ok) {
-                throw new Error('Failed to create payment order');
+                const errorData = await orderResponse.json();
+                console.error('Order creation failed:', errorData);
+                throw new Error(`Failed to create payment order: ${errorData.message}`);
             }
 
             const orderData = await orderResponse.json();
             console.log('Order Data:', orderData); // Debug log
             
             const options = {
-                key: "rzp_test_HUp5emZ4E3RHU3", // Use your key_id directly
+                key: "rzp_test_2drE7Lht1bNbBd", // Use your key_id directly
                 amount: orderData.data.amount,
                 currency: "INR",
                 name: 'Hotel Booking',
@@ -157,7 +159,7 @@ const BookingConfirmation = () => {
             console.log('Razorpay Options:', options); // Debug log
 
             const razorpay = new window.Razorpay(options);
-            razorpay.on('payment.failed', function(response) {
+            razorpay.on('payment.failed', (response) => {
                 console.error('Payment Failed:', response.error);
                 toast.error(`Payment failed: ${response.error.description}`);
             });

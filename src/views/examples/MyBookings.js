@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
-
+import config from "../../config";
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ const MyBookings = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/booking/user`, {
+      const response = await fetch(`${config.API_HOST}/api/booking/user`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

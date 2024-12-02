@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from "headroom.js";
 import { Badge } from "reactstrap";
-
+import config from "../../config";
 // reactstrap components
 import {
   Button,
@@ -191,7 +191,7 @@ class DemoNavbar extends React.Component {
                         >
                           <div
                             style={{
-                              backgroundImage: `url(http://localhost:3000/argon-design-system-react/static/media/grand.jpeg)`,
+                              backgroundImage: `url(${config.API_HOST}/argon-design-system-react/static/media/grand.jpeg)`,
                               backgroundSize: "cover", // Optional: for better fitting
                               backgroundPosition: "center", // Optional: for better positioning
                               height: "50px",
