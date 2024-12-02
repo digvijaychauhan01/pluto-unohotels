@@ -5,6 +5,7 @@ import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
+import config from "config";
 
 const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -39,7 +40,7 @@ const BookingConfirmation = () => {
                 //     return;
                 // }
 
-                const response = await fetch(`http://localhost:3000/api/booking/property-booking/${bookingId}`, {
+                const response = await fetch(`${config.API_HOST}/api/booking/property-booking/${bookingId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -80,7 +81,7 @@ const BookingConfirmation = () => {
                 return;
             }
 
-            const orderResponse = await fetch('http://localhost:3000/api/orders/create', {
+            const orderResponse = await fetch(`${config.API_HOST}/api/orders/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +124,7 @@ const BookingConfirmation = () => {
                 handler: async function(response) {
                     try {
                         console.log('Payment Response:', response);
-                        const verifyResponse = await fetch('http://localhost:3000/api/orders/verify', {
+                        const verifyResponse = await fetch(`${config.API_HOST}/api/orders/verify`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
