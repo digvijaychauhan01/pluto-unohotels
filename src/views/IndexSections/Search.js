@@ -21,7 +21,7 @@ const EnhancedSearch = () => {
 
   console.log(hotelId)
 
-  const dropdownOptions = ["Dharamshala", "Shimla", "Manali", "Kashmir", "Goa"];
+  const dropdownOptions = ["Dharamshala", "Shimla", "Manali", "Dalhousie", "Amritsar"];
 
   // Fetch hotels based on selected city
   useEffect(() => {
