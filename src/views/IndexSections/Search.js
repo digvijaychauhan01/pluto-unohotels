@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Menu } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 import { useNavigate } from "react-router-dom";
 import config from "config";
 
@@ -18,6 +18,7 @@ const EnhancedSearch = () => {
   const [hotelId, setHotelId] = useState(""); // Store the selected hotel ID
   const [hotels, setHotels] = useState([]); // Store the fetched hotels
   const navigate = useNavigate();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false); // New state for date picker visibility
 
   console.log(hotelId)
 
@@ -105,16 +106,31 @@ const EnhancedSearch = () => {
 
       
         {/* Check-Out Date */}
-        <div className="w-full">
-          
-          <DatePicker
-            selectsRange={true}
-            startDate={startDate}
-            endDate={endDate}
-            onChange={(update) => setDateRange(update)}
-            placeholderText="Select dates"
-            className="w-full px-4 py-3 bg-transparent border shadow-md border-gray-200 border-1 focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-lg"
+        <div className="w-full relative">
+          <input
+            type="text"
+            readOnly
+            value={`${dateRange[0] ? dateRange[0].toLocaleDateString() : ''}${dateRange[0] && dateRange[1] ? ' - ' : ''}${dateRange[1] ? dateRange[1].toLocaleDateString() : ''}`}
+            onClick={() => setIsDatePickerOpen(!isDatePickerOpen)} // Toggle date picker on input click
+            className="w-full px-4 py-3 bg-transparent border shadow-md border-gray-200 border-1 focus:outline-none focus:ring-2 focus:ring-blue-500 backdrop-blur-lg cursor-pointer"
+            placeholder="Select dates"
           />
+          {isDatePickerOpen && (
+            <div className="absolute z-[99999] p-4 !pt-0 mt-1 w-[350px] bg-white shadow-lg rounded-lg">
+              <DayPicker
+                mode="range"
+                selected={dateRange}
+                onDayClick={(day) => {
+                  if (dateRange[0] && dateRange[1]) {
+                    setDateRange([day, null]);
+                  } else {
+                    setDateRange((prev) => (prev[0] ? [prev[0], day] : [day, null]));
+                  }
+                }}
+                className="custom-day-picker"
+              />
+            </div>
+          )}
         </div>
 
 

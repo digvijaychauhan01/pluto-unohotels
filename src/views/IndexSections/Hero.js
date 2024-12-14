@@ -3,25 +3,29 @@ import { Container, Row, Col } from "reactstrap";
 import { FaSearch, FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import arrow icons
 import Search from "./Search"; // Import your Search form
 import styles from './Search.module.css'; // Import styles for layout
-
-// Hotel data with images
-const SliderImage = [
-  {
-    images: [
-      require("assets/img/brand/riverpine.png"),
-      require("assets/img/gallery/hydrangea.jpeg"),
-      require("assets/img/gallery/exot.jpeg"),
-    ]
-  },
-  // You can add more hotels and images here if needed
-];
+import config from '../../config'; // Import the config module
 
 const Hero = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false); // State to toggle form visibility
   const [currentIndex, setCurrentIndex] = useState(0); // State for the current image index
-  const images = SliderImage[0].images; // Dynamically set images from SliderImage
+  const [images, setImages] = useState([]); // State to hold fetched images
 
   const formRef = useRef(null); // Reference to the form element
+
+  // Fetch images from the API
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${config.API_HOST}/api/gallery/get-all-images`); // Use config.API_HOST
+        const data = await response.json();
+        setImages(data); // Set the fetched images to state
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    fetchImages(); // Call the fetch function
+  }, []); // Empty dependency array to run once on mount
 
   // Toggle the visibility of the search form
   const toggleSearch = () => {
@@ -58,7 +62,7 @@ const Hero = () => {
     <div className="position-relative">
       <section
         style={{
-          backgroundImage: `url(${images[currentIndex]})`, // Dynamically set background image
+          backgroundImage: `url(${images[currentIndex]})`, // Use fetched images
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "100vh", // Ensure full height section

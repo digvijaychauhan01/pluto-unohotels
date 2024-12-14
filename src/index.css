@@ -104,3 +104,35 @@ body {
     right: 15px;
   }
   
+ /* Add this CSS to your stylesheets *//* Add this CSS to your stylesheets */
+.city-dropdown {
+  position: relative;
+}
+
+.hotel-dropdown {
+  position: absolute;
+  left: 100%; /* Position to the right of the city name */
+  top: 0; /* Align with the top of the city name */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  width: 150px; /* Adjust the width as needed */
+}
+
+.city-dropdown:hover .hotel-dropdown {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hotel-dropdown .dropdown-item {
+  padding: 10px 15px;
+  transition: background-color 0.2s ease;
+}
+
+.hotel-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
