@@ -7,10 +7,10 @@ import config from '../../config'; // Import the config module
 
 const Hero = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false); // State to toggle form visibility
-  const [currentIndex, setCurrentIndex] = useState(0); // State for the current image index
+  const [currentIndex, setCurrentIndex] = useState(2); // State for the current image index
   const [images, setImages] = useState([]); // State to hold fetched images
 
-  const formRef = useRef(null); // Reference to the form element
+  const formRef = useRef(null); // Reference to the form element'
 
   // Fetch images from the API
   useEffect(() => {

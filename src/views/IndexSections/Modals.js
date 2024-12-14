@@ -27,6 +27,7 @@ class Modals extends React.Component {
     });
   };
   render() {
+    const isNavPage = this.props.page === "nav";
     return (
       <>
         <Row>
@@ -37,7 +38,7 @@ class Modals extends React.Component {
               color="black"
               type="button"
               onClick={() => this.toggleModal("formModal")}
-              style={{ background: "#fff", color: "#000" ,border:"1px"}}
+              style={{ background: isNavPage ? "#000" : '#fff', color: isNavPage ? "#fff" : "#000" ,border:"1px"}}
             >
               Query Now
             </Button>

@@ -60,9 +60,9 @@ root.render(
           </ProtectedRoute>
         } />
         <Route path="/booking" element={
-          <ProtectedRoute>
+          
             <Product />
-          </ProtectedRoute>
+       
         } />
         <Route path="/product-page" exact element={
           <ProtectedRoute>

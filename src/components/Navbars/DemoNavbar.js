@@ -20,6 +20,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import Modals from "views/IndexSections/Modals";
 
 // Create a functional wrapper to use the useAuth hook
 const DemoNavbarWithAuth = () => {
@@ -152,24 +153,9 @@ const DemoNavbar = ({ user, handleSignOut }) => {
                   </DropdownMenu>
                 </UncontrolledDropdown>
                 <UncontrolledDropdown nav>
-                  <DropdownToggle nav>
-                    <i className="ni ni-collection d-lg-none mr-1" />
-                    <span className="nav-link-inner--text">Weddings</span>
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem to="/landing-page" tag={Link}>
-                      Landing
-                    </DropdownItem>
-                    <DropdownItem to="/profile-page" tag={Link}>
-                      Profile
-                    </DropdownItem>
-                    <DropdownItem to="/login-page" tag={Link}>
-                      Login
-                    </DropdownItem>
-                    <DropdownItem to="/register-page" tag={Link}>
-                      Register
-                    </DropdownItem>
-                  </DropdownMenu>
+                
+                  <Modals page="nav"/>
+               
                 </UncontrolledDropdown>
                 <Link className="nav-link inner--text">
                   About Us 
