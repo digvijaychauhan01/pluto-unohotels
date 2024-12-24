@@ -65,8 +65,7 @@ const Footer = () => {
               <a href="#media">MEDIA</a>
               <a href="#blog">BLOG</a>
               <a href="#sitemap">SITEMAP</a>
-              {/* New Product Page Link */}
-              <Link to="/product-page">Product Page</Link>
+              <Link to="/agent-registration" className={styles.navLinks}>AGENT LOGIN</Link>
             </nav>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 
 // reactstrap components
 
@@ -12,6 +13,7 @@ import Homeoffercards from "./IndexSections/Homeoffercards.js";
 import HomeDestinationslider from "./IndexSections/HomeDestinationslider.js";
 import Footer from "./IndexSections/Footer.js";
 import FloatIcon from "./IndexSections/Floaticon.js";
+import AgentRegistration from "./IndexSections/AgentRegistration";
 
 class Index extends React.Component {
   componentDidMount() {
@@ -24,12 +26,22 @@ class Index extends React.Component {
       <>
         <DemoNavbar />
         <main ref="main">
-          <Hero />
-          <HomeDestinationcard />
-          <HomeDestinationslider />
-          <Homeoffercards />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Hero />
+                  <HomeDestinationcard />
+                  <HomeDestinationslider />
+                  <Homeoffercards />
+                </>
+              }
+            />
+            <Route path="/agent-registration" element={<AgentRegistration />} />
+          </Routes>
           <Footer />
-           <FloatIcon />
+          <FloatIcon />
         </main>
       </>
     );

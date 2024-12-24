@@ -66,6 +66,7 @@ body {
     position: relative;
     background: transparent;
     border: none;
+    border-radius: 10px;
   }
   
   .gallery-image {

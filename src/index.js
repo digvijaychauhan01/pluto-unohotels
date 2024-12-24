@@ -20,6 +20,7 @@ import Gallery from "views/IndexSections/Gallery";
 import BookingConfirmation from "views/examples/BookingConfirmation";
 import PaymentSuccess from "views/examples/PaymentSuccess.js";
 import MyBookings from "views/examples/MyBookings";
+import AgentRegistration from "views/IndexSections/AgentRegistration";
 
 const ProtectedRoute = ({ children }) => {
   const storedUser = localStorage.getItem('user');
@@ -54,6 +55,7 @@ root.render(
         <Route path="/register-page" exact element={<Register />} />
         <Route path="/contact-us" exact element={<Contactus />} />
         <Route path="/gallery" exact element={<Gallery />} />
+        <Route path="/agent-registration" element={<AgentRegistration />} />
         <Route path="/profile-page" exact element={
           <ProtectedRoute>
             <Profile />

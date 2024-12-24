@@ -19,8 +19,29 @@ import {
   Container,
   Row,
   Col,
+  Modal,
+  ModalBody,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Button,
 } from "reactstrap";
 import Modals from "views/IndexSections/Modals";
+import { toast } from 'react-hot-toast';
+
+// Add this CSS at the top of your file or in your styles
+const modalStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backdropFilter: 'blur(5px)',
+  },
+  content: {
+    borderRadius: '15px',
+    border: 'none',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+  }
+};
 
 // Create a functional wrapper to use the useAuth hook
 const DemoNavbarWithAuth = () => {
@@ -32,6 +53,11 @@ const DemoNavbar = ({ user, handleSignOut }) => {
   const [cities, setCities] = useState([]);
   const [hoveredCity, setHoveredCity] = useState(null);
   const [hoveredHotel, setHoveredHotel] = useState(null);
+  const [isAgentLoginOpen, setIsAgentLoginOpen] = useState(false);
+  const [agentLoginData, setAgentLoginData] = useState({
+    username: '',
+    password: ''
+  });
 
   useEffect(() => {
     // Configure Headroom
@@ -70,6 +96,49 @@ const DemoNavbar = ({ user, handleSignOut }) => {
     if (user.email) return user.email.split('@')[0];
     if (user.phone) return `+91 ${user.phone}`;
     return 'User';
+  };
+
+  const toggleAgentLogin = () => {
+    setIsAgentLoginOpen(!isAgentLoginOpen);
+  };
+
+  const handleAgentLoginChange = (e) => {
+    const { name, value } = e.target;
+    setAgentLoginData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAgentLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3000/api/agents/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(agentLoginData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Login successful');
+        // Store the token
+        localStorage.setItem('agentToken', data.data.token);
+        // Close the modal
+        toggleAgentLogin();
+        // Reset form
+        setAgentLoginData({ username: '', password: '' });
+        // You might want to redirect to agent dashboard here
+      } else {
+        toast.error(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Something went wrong');
+    }
   };
 
   return (
@@ -230,12 +299,119 @@ const DemoNavbar = ({ user, handleSignOut }) => {
                     </NavItem>
                   </>
                 )}
-                {/* Other nav items */}
+                {/* Add Agent Login Button */}
+                <NavItem>
+                  <Button
+                    className="btn-neutral btn-icon bg-none"
+                    color="default"
+                    onClick={toggleAgentLogin}
+                  >
+                    <span className="nav-link-inner--text">Agent Login</span>
+                  </Button>
+                </NavItem>
               </Nav>
             </UncontrolledCollapse>
           </Container>
         </Navbar>
       </header>
+
+      {/* Agent Login Modal */}
+      <Modal
+        isOpen={isAgentLoginOpen}
+        toggle={toggleAgentLogin}
+        className="modal-dialog-centered"
+        contentClassName="border-0"
+        style={modalStyles}
+      >
+        <div className="modal-header bg-gradient-primary py-4 px-6 align-items-center">
+          <div className="d-flex align-items-center">
+            <i className="ni ni-key-25 text-white mr-3" style={{ fontSize: '24px' }}></i>
+            <h4 className="modal-title text-white mb-0">Agent Login</h4>
+          </div>
+          <button
+            aria-label="Close"
+            className="close text-white"
+            type="button"
+            onClick={toggleAgentLogin}
+          >
+            <span aria-hidden={true}>×</span>
+          </button>
+        </div>
+        <ModalBody className="px-lg-5 py-lg-5 bg-white rounded-bottom">
+          <div className="text-center text-muted mb-4">
+            <small>Sign in with your credentials</small>
+          </div>
+          <Form role="form" onSubmit={handleAgentLogin}>
+            <FormGroup className="mb-4">
+              <Label className="form-control-label">Username</Label>
+              <div className="input-group input-group-alternative">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">
+                    <i className="ni ni-single-02"></i>
+                  </span>
+                </div>
+                <Input
+                  placeholder="Enter your username"
+                  type="text"
+                  name="username"
+                  value={agentLoginData.username}
+                  onChange={handleAgentLoginChange}
+                  className="form-control-alternative"
+                  required
+                />
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <Label className="form-control-label">Password</Label>
+              <div className="input-group input-group-alternative">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">
+                    <i className="ni ni-lock-circle-open"></i>
+                  </span>
+                </div>
+                <Input
+                  placeholder="Enter your password"
+                  type="password"
+                  name="password"
+                  value={agentLoginData.password}
+                  onChange={handleAgentLoginChange}
+                  className="form-control-alternative"
+                  required
+                />
+              </div>
+            </FormGroup>
+            <div className="custom-control custom-control-alternative custom-checkbox mb-3">
+              <input
+                className="custom-control-input"
+                id="rememberMe"
+                type="checkbox"
+              />
+              <label className="custom-control-label" htmlFor="rememberMe">
+                <span>Remember me</span>
+              </label>
+            </div>
+            <div className="text-center">
+              <Button
+                className="my-4 px-5"
+                color="primary"
+                type="submit"
+                size="lg"
+              >
+                Sign In
+              </Button>
+            </div>
+          </Form>
+          <div className="text-center mt-3">
+            <Link 
+              to="/agent-registration" 
+              className="text-primary"
+              onClick={toggleAgentLogin}
+            >
+              <small>New Agent? Register here</small>
+            </Link>
+          </div>
+        </ModalBody>
+      </Modal>
     </>
   );
 };
